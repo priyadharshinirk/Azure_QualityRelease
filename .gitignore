@@ -1,3 +1,6 @@
 .terraform
 
-terraform\environment\test\.terraform
+terraform/environment/test/.terraform
+
+automatedtesting/jmeter/EnduranceReport
+automatedtesting/jmeter/StressReport
