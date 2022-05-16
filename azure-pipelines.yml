@@ -65,7 +65,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'azurerm-sc'
+        backendServiceArm: 'MyServiceConnection195746'
         backendAzureRmResourceGroupName: 'Azuredevops'
         backendAzureRmStorageAccountName: 'storage195746'
         backendAzureRmContainerName: 'storagecontainer195746'
@@ -80,7 +80,7 @@ stages:
         commandOptions: |
           -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: 'azurerm-sc'
+        environmentServiceNameAzureRM: 'MyServiceConnection195746'
 
 - stage: Build
   jobs:
@@ -347,7 +347,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'azurerm-sc'
+        backendServiceArm: ${azureServiceConnectionId}
         backendAzureRmResourceGroupName: 'tstate'
         backendAzureRmStorageAccountName: 'tstate12785'
         backendAzureRmContainerName: 'tstate'
@@ -362,4 +362,4 @@ stages:
         commandOptions: |
           -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: 'azurerm-sc'
+        environmentServiceNameAzureRM: ${azureServiceConnectionId}
