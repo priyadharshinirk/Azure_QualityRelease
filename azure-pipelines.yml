@@ -67,16 +67,17 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
         backendServiceArm: 'MyServiceConnection195746'
         backendAzureRmResourceGroupName: 'Azuredevops'
         backendAzureRmStorageAccountName: 'storage195746'
         backendAzureRmContainerName: 'storagecontainer195746'
         backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
-  
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
         environmentServiceNameAzureRM: 'MyServiceConnection195746'
 
 - stage: Build
