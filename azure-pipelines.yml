@@ -23,7 +23,7 @@ stages:
       name: tfvardef
       displayName: Download terraform.tfvars
       inputs:
-        secureFile: 'terraform.tfvars' 
+        secureFile: '/terraform/environments/test' 
 
     # Needed for Terraform VM deployment
     - task: InstallSSHKey@0
