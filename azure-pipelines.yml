@@ -17,7 +17,7 @@ stages:
   - job: provision_azure_infrastructure
     displayName: Provision Azure Infrastructure
     pool:
-      vmImage: 'ubuntu-18.04'
+      name: myAgentPool
     steps:
     # - task: DownloadSecureFile@1
     #   name: tfvardef
@@ -87,7 +87,7 @@ stages:
   - job: build_artifacts
     displayName: Build Artifacts
     pool:
-      vmImage: 'ubuntu-18.04'
+      name: myAgentPool
     steps:
     - task: ArchiveFiles@2
       displayName: Archive FakeRestAPI
@@ -124,7 +124,7 @@ stages:
   - deployment: deployment_fakerestapi
     displayName: Deploy FakeRestAPI
     pool:
-      vmImage: 'ubuntu-18.04'
+      name: myAgentPool
     environment: 'TEST'
     strategy:
       runOnce:
@@ -212,7 +212,7 @@ stages:
   - job: test_jmeter
     displayName: Test JMeter
     pool:
-      vmImage: 'ubuntu-18.04'
+      name: myAgentPool
     steps:
     - bash: |
         sudo apt-get install openjdk-11-jre-headless -y
@@ -316,7 +316,7 @@ stages:
   - job: destroy_azure_infrastructure
     displayName: Destroy Azure Infrastructure
     pool:
-      vmImage: 'ubuntu-18.04'
+      name: myAgentPool
     steps:
     # - task: DownloadSecureFile@1
     #   name: tfvardef
