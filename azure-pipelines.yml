@@ -347,7 +347,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: ${azureServiceConnectionId}
+        backendServiceArm: $(azureServiceConnectionId)
         backendAzureRmResourceGroupName: 'tstate'
         backendAzureRmStorageAccountName: 'tstate12785'
         backendAzureRmContainerName: 'tstate'
@@ -362,4 +362,4 @@ stages:
         commandOptions: |
           -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: ${azureServiceConnectionId}
+        environmentServiceNameAzureRM: $(azureServiceConnectionId)
