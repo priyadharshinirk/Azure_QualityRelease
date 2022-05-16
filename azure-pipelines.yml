@@ -4,7 +4,7 @@ variables:
   azureServiceConnectionId: 'MyServiceConnection195746'
   
   # TODO: Replace 'mywebapp193576' with the existing Web App name
-  webAppName: 'FakeRestAPI195746'
+  webAppName: 'Applicationtype195746-AppService'
 stages:
 - stage: Build
   jobs:
