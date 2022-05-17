@@ -220,8 +220,8 @@ stages:
         displayName: 'Run Jmeter test'
         inputs:
           targetType: 'inline'
-        script: |
-          jmeter -n -t automatedtesting/jmeter/Starter.jmx -Jresdir=automatedtesting/jmeter/pages.csv
+          script: |
+            jmeter -n -t automatedtesting/jmeter/Starter.jmx -Jresdir=automatedtesting/jmeter/pages.csv
 
   # - job: test_jmeter
   #   displayName: Test JMeter
