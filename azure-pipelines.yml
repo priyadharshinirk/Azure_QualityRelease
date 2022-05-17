@@ -227,9 +227,11 @@ stages:
         ls -la
       displayName: Install JMeter
     - bash: |
+        mkdir log/jmeter/Stress-test-html-report
         apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.jmx -e -o log/jmeter/Stress-test-html-report
       displayName: JMeter Stress test
     - bash: |
+        mkdir log/jmeter/Endurance-test-html-report
         apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.jmx -e -o log/jmeter/Endurance-test-html-report
       displayName: JMeter endurance test
       # - bash: |
