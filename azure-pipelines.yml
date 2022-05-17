@@ -12,6 +12,7 @@ variables:
   python.version: '3.7.6'
   azureServiceConnectionId: 'MyServiceConnection195883'
   webAppName: 'Udacity-AppService'
+  AZURE_LOG_ANALYTICS_ID:'9f58d111-3c3b-4a0e-abfd-7cf604fbb185'
 stages:
 - stage: Provision
   jobs:
@@ -91,12 +92,13 @@ stages:
     #     backendAzureRmStorageAccountName: 'storage195883'
     #     backendAzureRmContainerName: 'storagecontainer195883'
     #     backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
-    # - task: TerraformTaskV2@2
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection195883'
+    - task: TerraformTaskV2@2
+      continueOnError: true
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection195883'
 
 - stage: Build
   jobs:
@@ -155,7 +157,7 @@ stages:
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
 
-  - deployment: deployment_vm
+  - deployment: Udacity-vm
     displayName: Deploy Virtual Machine
     environment:
       name: 'TEST'
