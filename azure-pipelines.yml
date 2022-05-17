@@ -221,7 +221,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            jmeter -n -t automatedtesting/jmeter/Starter.jmx -Jresdir=automatedtesting/jmeter/pages.csv
+            jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
 
   # - job: test_jmeter
   #   displayName: Test JMeter
