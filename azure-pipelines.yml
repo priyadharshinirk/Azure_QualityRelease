@@ -160,7 +160,7 @@ stages:
     displayName: Deploy Virtual Machine
     environment:
       name: 'TEST'
-      resourceType: VirtualMachine
+      resourceType: 'Azuredevops'
     strategy:
       runOnce:
         deploy:
