@@ -156,7 +156,7 @@ stages:
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
 
-  - deployment: Udacity-vm
+  - deployment: Udacity_vm
     displayName: Deploy Virtual Machine
     environment:
       name: 'TEST'
