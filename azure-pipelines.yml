@@ -211,20 +211,23 @@ stages:
     pool:
       name: myAgentPool
     steps:
-      - task: JavaToolInstaller@0
-        inputs:
-          versionSpec: '8'
-          jdkArchitectureOption: 'x64'
-          jdkSourceOption: 'PreInstalled'
-      - task: JMeterInstaller@0
-        inputs:
-          jmeterVersion: '5.4.2'
+      - bash: |
+          sudo apt install openjdk-8-jdk openjdk-8-jre
+          java -version
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O jmeter.tgz
+          tar xzvf jmeter.tgz
+          apache-jmeter-5.4.3/bin/jmeter --version
+          # create log directory
+          mkdir -p log/jmeter
+          pwd
+          ls -la
+        displayName: Install JMetert automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+
       - task: Bash@3
         displayName: 'Run Jmeter test'
         inputs:
           targetType: 'inline'
           script: |
-            mkdir -p log/jmeter
             mkdir -p log/jmeter/Stress-test-html-report
             truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
             jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
