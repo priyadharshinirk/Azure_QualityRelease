@@ -226,26 +226,12 @@ stages:
         pwd
         ls -la
       displayName: Install JMeter
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          
-          script: jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.jmx -e -o automatedtesting/jmeter/Result/StressTest
-        displayName: JMeter stress test
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          
-          script: jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.jmx -e -o automatedtesting/jmeter/Result/EnduranceTest
-        displayName: JMeter Endurance test
+    - bash: |
+        apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.jmx -e -o automatedtesting/jmeter/Result/StressTest
+      displayName: JMeter Stress test
+    - bash: |
+        apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.jmx -e -o automatedtesting/jmeter/Result/EnduranceTest
+      displayName: JMeter endurance test
       # - bash: |
     #     apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx \
     #                                  -l log/jmeter/EnduranceTestResult.csv \
