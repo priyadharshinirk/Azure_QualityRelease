@@ -1,15 +1,15 @@
 # Azure subscription vars
-subscription_id = "cb92da61-1890-433d-9ab4-0576f7967b30"
-client_id = "960ef11c-666d-40b9-ba94-13379ce7205c"
-client_secret = "DsdGeWTcux6HQehiXQHUL72.2O~JBA08_9"
-tenant_id = "cd9d3ac3-c95c-491e-8cd6-8b32bebd7f89"
+subscription_id = "7644e876-2436-45bf-a2d1-411f48f28ecb"
+client_id = "f13f2ad1-ac97-49cd-b0b1-265400fe59ee"
+client_secret = "Qxs.8h2eLbpKBor32q.vSZ~VgFrEtGHzaM"
+tenant_id = "84ede25a-f344-41a3-bf1d-ae5589444b6a"
 
 # Resource Group/Location
 location = "South Central US"
 resource_group = "Azuredevops"
-application_type = "Applicationtype195746"
+application_type = "Udacity"
 
 # Network
-virtual_network_name = "VN195746"
+virtual_network_name = "VN195883"
 address_space = ["10.5.0.0/16"]
 address_prefix_test = "10.5.1.0/24"
