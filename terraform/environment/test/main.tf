@@ -47,12 +47,3 @@ module "publicip" {
   resource_type    = "publicip"
   resource_group   = "Azuredevops"
 }
-module "vm" {
-  source           = "../../modules/vm"
-  location         = "${var.location}"
-  application_type = "${var.application_type}"
-  resource_type    = "vm"
-  resource_group   = "Azuredevops"
-  subnet_id        = "${module.network.subnet_id_test}"
-  publicip         ="${module.publicip.public_ip_address_id}"
-}
