@@ -230,7 +230,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
-            jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
 
   # - job: test_jmeter
   #   displayName: Test JMeter
