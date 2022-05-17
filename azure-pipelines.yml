@@ -33,7 +33,7 @@ stages:
         sshKeySecureFile: id_rsa.txt
 
     - bash: |
-        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
+        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
       displayName: Copy terraform.tfvars
 
     - bash: |
