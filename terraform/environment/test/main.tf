@@ -10,7 +10,7 @@ terraform {
     storage_account_name = "storage195883"
     container_name       = "storagecontainer195883"
     key                  = "key1"
-    access_key           = "diOlaOa2LyyltnFJ0NFSbNHBZqRz834ZhgqAxMnIwfDjNv5tnGlxkj9Uiv2zlDZXJxBuJ60LKBgMqCn2vbEkXA=="
+    access_key           = "VtVcRD31cEazfOqBA7OxgCxLVm8HYbfppwR/2OJMr6p1Ug6SDMYBipVGf+1CdFtm4xh4Au7/Grp62qMLfBCB2w=="
   }
 }
 module "network" {
@@ -46,4 +46,13 @@ module "publicip" {
   application_type = "${var.application_type}"
   resource_type    = "publicip"
   resource_group   = "Azuredevops"
+}
+module "vm" {
+  source           = "../../modules/vm"
+  location         = "${var.location}"
+  application_type = "${var.application_type}"
+  resource_type    = "vm"
+  resource_group   = "Azuredevops"
+  subnet_id        = "${module.network.subnet_id_test}"
+  publicip         ="${module.publicip.public_ip_address_id}"
 }
