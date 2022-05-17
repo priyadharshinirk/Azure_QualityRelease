@@ -12,7 +12,6 @@ variables:
   python.version: '3.7.6'
   azureServiceConnectionId: 'MyServiceConnection195883'
   webAppName: 'Udacity-AppService'
-  AZURE_LOG_ANALYTICS_ID:'9f58d111-3c3b-4a0e-abfd-7cf604fbb185'
 stages:
 - stage: Provision
   jobs:
