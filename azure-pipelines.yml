@@ -10,8 +10,8 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection195746'
-  webAppName: 'Applicationtype195746-AppService'
+  azureServiceConnectionId: 'MyServiceConnection195883'
+  webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
   jobs:
@@ -68,17 +68,17 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        backendServiceArm: 'MyServiceConnection195746'
+        backendServiceArm: 'MyServiceConnection195883'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage195746'
-        backendAzureRmContainerName: 'storagecontainer195746'
+        backendAzureRmStorageAccountName: 'storage195883'
+        backendAzureRmContainerName: 'storagecontainer195883'
         backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection195746'
+        environmentServiceNameAzureRM: 'MyServiceConnection195883'
 
 - stage: Build
   jobs:
@@ -345,10 +345,10 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'MyServiceConnection195746'
+        backendServiceArm: 'MyServiceConnection195883'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage195746'
-        backendAzureRmContainerName: 'storagecontainer195746'
+        backendAzureRmStorageAccountName: 'storage195883'
+        backendAzureRmContainerName: 'storagecontainer195883'
         backendAzureRmKey: 'terraform.tfstate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
