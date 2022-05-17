@@ -79,6 +79,7 @@ stages:
         provider: 'azurerm'
         command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection195883'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
