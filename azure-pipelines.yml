@@ -26,11 +26,11 @@ stages:
     #   inputs:
     #     secureFile: $(System.DefaultWorkingDirectory)/terraform/environments/test 
 
-      - task: InstallSSHKey@0
-        inputs:
-          knownHostsEntry: '~/.ssh/known_hosts'
-          sshKeySecureFile: '~/.ssh/id_rsa.pub'
-          sshPublicKey: $(PUBLIC_KEY)
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/known_hosts'
+        sshKeySecureFile: '~/.ssh/id_rsa.pub'
+        sshPublicKey: $(PUBLIC_KEY)
 
     # Needed for Terraform VM deployment
     # - task: InstallSSHKey@0
