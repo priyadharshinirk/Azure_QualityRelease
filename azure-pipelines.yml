@@ -221,7 +221,7 @@ stages:
           mkdir -p log/jmeter
           pwd
           ls -la
-        displayName: Install JMetert automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+        displayName: Install JMetert 
 
       - task: Bash@3
         displayName: 'Run Jmeter test'
@@ -229,8 +229,9 @@ stages:
           targetType: 'inline'
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
+            echo 'created folder'
             truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
-            apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+            apache-jmeter-5.4.3/bin/automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -f -o log/jmeter/Stress-test-html-report
 
   # - job: test_jmeter
   #   displayName: Test JMeter
