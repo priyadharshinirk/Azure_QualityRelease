@@ -74,29 +74,29 @@ stages:
         backendAzureRmStorageAccountName: 'storage195883'
         backendAzureRmContainerName: 'storagecontainer195883'
         backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection195883'
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'myserviceconnection195883'
-        backendServiceArm: 'MyServiceConnection195883'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage195883'
-        backendAzureRmContainerName: 'storagecontainer195883'
-        backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection195883'
+    # - task: TerraformTaskV2@2
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'destroy'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection195883'
+    # - task: TerraformTaskV2@2
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'myserviceconnection195883'
+    #     backendServiceArm: 'MyServiceConnection195883'
+    #     backendAzureRmResourceGroupName: 'Azuredevops'
+    #     backendAzureRmStorageAccountName: 'storage195883'
+    #     backendAzureRmContainerName: 'storagecontainer195883'
+    #     backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
+    # - task: TerraformTaskV2@2
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection195883'
 
 - stage: Build
   jobs:
