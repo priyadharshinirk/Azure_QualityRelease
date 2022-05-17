@@ -211,6 +211,11 @@ stages:
     pool:
       name: myAgentPool
     steps:
+      - task: JavaToolInstaller@0
+        inputs:
+          versionSpec: '8'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: 'PreInstalled'
       - task: JMeterInstaller@0
         inputs:
           jmeterVersion: '5.4.2'
