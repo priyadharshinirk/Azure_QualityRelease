@@ -212,9 +212,8 @@ stages:
       name: myAgentPool
     steps:
       - task: JMeterInstaller@0
-        displayName: 'Install JMeter 5.2.1'
         inputs:
-          jmeterVersion: '5.2.1'
+          jmeterVersion: '5.4.2'
       - task: Bash@3
         displayName: 'Run Jmeter test'
         inputs:
