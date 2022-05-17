@@ -74,23 +74,6 @@ stages:
         backendAzureRmStorageAccountName: 'storage195883'
         backendAzureRmContainerName: 'storagecontainer195883'
         backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
-    # - task: TerraformTaskV2@2
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'destroy'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection195883'
-    # - task: TerraformTaskV2@2
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'init'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'myserviceconnection195883'
-    #     backendServiceArm: 'MyServiceConnection195883'
-    #     backendAzureRmResourceGroupName: 'Azuredevops'
-    #     backendAzureRmStorageAccountName: 'storage195883'
-    #     backendAzureRmContainerName: 'storagecontainer195883'
-    #     backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
@@ -243,14 +226,14 @@ stages:
         ls -la
       displayName: Install JMeter
     - bash: |
-        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/stress-test.jmx \
-                                     -l log/jmeter/stress-test-result.csv \
+        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx \
+                                     -l log/jmeter/StressTestResult.csv \
                                      -e -f -o log/jmeter/stress-test-html-report \
                                      -j log/jmeter/jmeter-stress-test.log
       displayName: JMeter stress test
     - bash: |
-        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/endurance-test.jmx \
-                                     -l log/jmeter/endurance-test-result.csv \
+        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx \
+                                     -l log/jmeter/EnduranceTestResult.csv \
                                      -e -f -o log/jmeter/endurance-test-html-report \
                                      -j log/jmeter/jmeter-endurance-test.log
       displayName: JMeter endurance test
@@ -335,43 +318,41 @@ stages:
     pool:
       name: myAgentPool
     steps:
-    # - task: DownloadSecureFile@1
-    #   name: tfvardef
-    #   displayName: Download terraform.tfvars
-    #   inputs:
-    #     secureFile: 'terraform.tfvars' 
+    - task: DownloadSecureFile@1
+      name: tfvardef
+      displayName: Download terraform.tfvars
+      inputs:
+        secureFile: terraform.tfvars
 
-    # Needed for Terraform VM deployment
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: 'known_hosts'
-    #     sshPublicKey: $(PUBLIC_KEY)
-    #     sshKeySecureFile: 'udacity_azure'
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/known_hosts'
+        sshPublicKey: $(PUBLIC_KEY)
+        sshKeySecureFile: id_rsa.txt
 
-    # - bash: |
-    #     cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
-    #   displayName: Copy terraform.tfvars
+    - bash: |
+        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
+      displayName: Copy terraform.tfvars
 
     # install Terraform Azure Pipelines Extension by Microsoft DevLabs
     # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
     - task: TerraformInstaller@0
       displayName: Install Terraform
       inputs:
-        terraformVersion: '0.203.0'
-
-    - task: TerraformTaskV1@0
+        terraformVersion: 'latest'
+    - task: TerraformTaskV2@2
       displayName: Terraform Init
       inputs:
         provider: 'azurerm'
         command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'myserviceconnection195883'
         backendServiceArm: 'MyServiceConnection195883'
         backendAzureRmResourceGroupName: 'Azuredevops'
         backendAzureRmStorageAccountName: 'storage195883'
         backendAzureRmContainerName: 'storagecontainer195883'
-        backendAzureRmKey: 'terraform.tfstate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-
-    - task: TerraformTaskV1@0
+        backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
+    - task: TerraformTaskV2@2
       displayName: Terraform Destroy
       inputs:
         provider: 'azurerm'
