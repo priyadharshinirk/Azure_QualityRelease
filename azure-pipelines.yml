@@ -10,7 +10,7 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection195883'
+  azureServiceConnectionId: 'MyServiceConnection196044'
   webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
@@ -67,19 +67,19 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'myserviceconnection195883'
-        backendServiceArm: 'MyServiceConnection195883'
+        environmentServiceNameAzureRM: 'MyServiceConnection196044'
+        backendServiceArm: 'MyServiceConnection196044'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage195883'
-        backendAzureRmContainerName: 'storagecontainer195883'
-        backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
+        backendAzureRmStorageAccountName: 'storage196044'
+        backendAzureRmContainerName: 'storagecontainer196044'
+        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection195883'
+        environmentServiceNameAzureRM: 'MyServiceConnection196044'
 
 - stage: Build
   jobs:
@@ -138,7 +138,7 @@ stages:
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
 
-  - deployment: UdacityVm
+  - deployment: myLinuxVM
     displayName: Deploy Virtual Machine
     environment:
       name: 'TEST'
@@ -177,7 +177,7 @@ stages:
 
 - stage: Test
   jobs:
-  - deployment: test_vm
+  - deployment: myLinuxVM
     displayName: Test on Virtual Machine
     environment:
       name: 'TEST'
@@ -369,24 +369,26 @@ stages:
       displayName: Install Terraform
       inputs:
         terraformVersion: 'latest'
+        
     - task: TerraformTaskV2@2
       displayName: Terraform Init
       inputs:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'myserviceconnection195883'
-        backendServiceArm: 'MyServiceConnection195883'
+        environmentServiceNameAzureRM: 'MyServiceConnection196044'
+        backendServiceArm: 'MyServiceConnection196044'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage195883'
-        backendAzureRmContainerName: 'storagecontainer195883'
-        backendAzureRmKey: 'QrO8KvR4uHqURblCOLiND3SITtha+azU+Nj4JVGre+unArI0Vyy8rA2BK3+WVYOj61CIvfLfOxLjnnijqczmJw=='
+        backendAzureRmStorageAccountName: 'storage196044'
+        backendAzureRmContainerName: 'storagecontainer196044'
+        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
     - task: TerraformTaskV2@2
-      displayName: Terraform Destroy
+      continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'destroy'
         commandOptions: |
           -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+        environmentServiceNameAzureRM: 'MyServiceConnection196044'
+      displayName: Terraform Destroy
