@@ -2,6 +2,7 @@
 from lib2to3.pgen2 import driver
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 # Start the browser and login with standard_user
@@ -42,21 +43,19 @@ if __name__ == "__main__":
     print ('Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
-    chromeOptions = webdriver.ChromeOptions()
-    chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
-    chromeOptions.add_argument("--no-sandbox") 
-    chromeOptions.add_argument("--disable-setuid-sandbox") 
-
-    chromeOptions.add_argument("--remote-debugging-port=9222")  # this
-
-    chromeOptions.add_argument("--disable-dev-shm-using") 
-    chromeOptions.add_argument("--disable-extensions") 
-    chromeOptions.add_argument("--disable-gpu") 
-    chromeOptions.add_argument("start-maximized") 
-    chromeOptions.add_argument("disable-infobars")
+    options = Options()
+    # options.binary_location = ""    #chrome binary location specified here
+    options.add_argument("--headless")
+    options.add_argument("--start-maximized")
+    options.add_argument("--no-sandbox") #bypass OS security model
+    options.add_argument("--disable-dev-shm-usage") #overcome limited resource problems
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    driver = webdriver.Chrome(options=options, executable_path="chromedriver.exe")
+    # driver.get('http://google.com/')
     # chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
     # options.add_experimental_option("useAutomationExtension", false)
-    driver = webdriver.Chrome(options=chromeOptions)
+    driver = webdriver.Chrome(options=options)
 # driver=webdriver.Chrome()
     login(driver,'standard_user', 'secret_sauce')
     add_items_cart(driver,num_items)
