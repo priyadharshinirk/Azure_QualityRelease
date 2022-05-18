@@ -1,10 +1,8 @@
 # #!/usr/bin/env python
 from lib2to3.pgen2 import driver
 import time
-import datetime
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from sqlalchemy import false
+from selenium.webdriver.chrome.options import Options
 import os
 
 
@@ -46,7 +44,7 @@ if __name__ == "__main__":
     print ('Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
-    options = ChromeOptions()
+    options = Options()
     options.add_argument("start-maximized");  
     options.add_argument("disable-infobars"); 
     options.add_argument("--disable-extensions"); 
