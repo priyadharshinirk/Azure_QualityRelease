@@ -187,21 +187,26 @@ stages:
         deploy:
           steps:
           - bash: |
-              cd $(Pipeline.Workspace)/drop-selenium
-              find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
-              unzip -o selenium-$(Build.BuildId).zip
-              pwd
-              ls -la
-              sudo mkdir -p /var/log/selenium
-              sudo chmod 664 /var/log/selenium
-              PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
-              sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-              # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
-              cd $(System.DefaultWorkingDirectory)
-              mkdir -p log/selenium
-              pwd
-              sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-              ls -la
+              wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
+              unzip chromedriver_linux64.zip
+              sudo mv chromedriver /usr/bin/chromedriver
+              sudo chown root:root /usr/bin/chromedriver
+              python3 automatedtesting/selenium/login.py
+            # cd $(Pipeline.Workspace)/drop-selenium
+            # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
+            # unzip -o selenium-$(Build.BuildId).zip
+            # pwd
+            # ls -la
+            # sudo mkdir -p /var/log/selenium
+            # sudo chmod 664 /var/log/selenium
+            # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
+            # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+            # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+            # cd $(System.DefaultWorkingDirectory)
+            # mkdir -p log/selenium
+            # pwd
+            # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
+            # ls -la
             displayName: Run selenium tests
           - task: PublishPipelineArtifact@1
             displayName: Publish selenium logs
