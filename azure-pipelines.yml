@@ -10,7 +10,7 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection195883'
+  azureServiceConnectionId: 'MyServiceConnection196044'
   webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
