@@ -176,7 +176,7 @@
         </ResultCollector>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="filename">C:/Users/Priyadharshini.R/Desktop/Learning/Reskilling/Cloud Devops/Project 3/Azure_QualityRelease/automatedtesting/jmeter/id.csv</stringProp>
+          <stringProp name="filename">automatedtesting/jmeter/id.csv</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="variableNames">activityID</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
