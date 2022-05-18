@@ -194,7 +194,7 @@ stages:
               ls -la
               sudo mkdir -p /var/log/selenium
               sudo chmod 664 /var/log/selenium
-              sudo python3 -u selenium-test.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+              sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
               # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
               cd $(System.DefaultWorkingDirectory)
               mkdir -p log/selenium
@@ -290,14 +290,14 @@ stages:
       displayName: Install Newman
     - bash: |
         newman run automatedtesting/postman/Regression_Test_Suite.json \
-                  # -e automatedtesting/postman/validation-test-env.postman-environment.json \
+                   -e automatedtesting/postman/Test.postman_environment.json \
                    --reporters cli,junit \
                    --reporter-junit-export log/newman/regression-test.xml \
                    --suppress-exit-code
       displayName: Newman regression test
     - bash: |
         newman run automatedtesting/postman/Data_Validation_Test_Suite.json \
-                   # -e automatedtesting/postman/validation-test-env.postman-environment.json \
+                    -e automatedtesting/postman/Test.postman_environment.json \
                    --reporters cli,junit \
                    --reporter-junit-export log/newman/validation-test.xml \
                    --suppress-exit-code
@@ -365,20 +365,20 @@ stages:
       inputs:
         terraformVersion: 'latest'
         
-    # - task: TerraformTaskV2@2
-    #   displayName: Terraform Init
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'init'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection196044'
-    #     backendServiceArm: 'MyServiceConnection196044'
-    #     backendAzureRmResourceGroupName: 'Azuredevops'
-    #     backendAzureRmStorageAccountName: 'storage196044'
-    #     backendAzureRmContainerName: 'storagecontainer196044'
-    #     backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+    - task: TerraformTaskV1@0
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection196044'
+        backendServiceArm: 'MyServiceConnection196044'
+        backendAzureRmResourceGroupName: 'Azuredevops'
+        backendAzureRmStorageAccountName: 'storage196044'
+        backendAzureRmContainerName: 'storagecontainer196044'
+        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
 
-    - task: TerraformTaskV2@2
+    - task: TerraformTaskV1@0
       continueOnError: true
       displayName: Terraform Destroy
       inputs:
