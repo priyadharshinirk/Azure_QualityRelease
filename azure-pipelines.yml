@@ -240,6 +240,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Endurance-test-html-report
             echo 'created folder'
+            truncate -s 0 automatedtesting/jmeter/EnduranceTestResult.csv
             apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
           
           # rm automatedtesting/jmeter/StressTestResult.csv
