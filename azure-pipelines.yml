@@ -212,7 +212,7 @@ stages:
       name: myAgentPool
     steps:
       - bash: |
-          sudo apt install openjdk-8-jdk openjdk-8-jre
+          sudo apt-get install openjdk-11-jre-headless -y
           java -version
           wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O jmeter.tgz
           tar xzvf jmeter.tgz
@@ -227,13 +227,17 @@ stages:
         displayName: 'Run Jmeter test'
         inputs:
           targetType: 'inline'
+          failOnStderr: true
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             echo 'created folder'
             truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
-            apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
-            apache-jmeter-5.4.3/bin/jmeter -g automatedtesting/jmeter/StressTestResult.csv -o log/jmeter/Stress-test-html-report
-            #-e -o log/jmeter/Stress-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+          # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
+          # apache-jmeter-5.4.3/bin/jmeter -g automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+          # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+          # –j log/jmeter/jmeter.log
+          #-e -o log/jmeter/Stress-test-html-report
 
   # - job: test_jmeter
   #   displayName: Test JMeter
