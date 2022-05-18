@@ -241,46 +241,7 @@ stages:
             mkdir -p log/jmeter/Endurance-test-html-report
             echo 'created folder'
             apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -f -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
-          
-          # rm automatedtesting/jmeter/StressTestResult.csv
-          # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
-          # apache-jmeter-5.4.3/bin/jmeter -g automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
-          # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
-          # –j log/jmeter/jmeter.log
-          #-e -o log/jmeter/Stress-test-html-report
-          #  truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
 
-  # - job: test_jmeter
-  #   displayName: Test JMeter
-  #   pool:
-  #     name: myAgentPool
-  #   steps:
-
-    # - bash: |
-    #     sudo apt-get install openjdk-11-jre-headless -y
-    #     java -version
-    #     wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O jmeter.tgz
-    #     tar xzvf jmeter.tgz
-    #     apache-jmeter-5.4.3/bin/jmeter --version
-    #     # create log directory
-    #     mkdir -p log/jmeter
-    #     pwd
-    #     ls -la
-    #   displayName: Install JMeter
-    # - bash: |
-    #     mkdir log/jmeter/Stress-test-html-report
-    #     apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.jmx -e -o log/jmeter/Stress-test-html-report
-    #   displayName: JMeter Stress test
-    # - bash: |
-    #     mkdir log/jmeter/Endurance-test-html-report
-    #     apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.jmx -e -o log/jmeter/Endurance-test-html-report
-    #   displayName: JMeter endurance test
-      # - bash: |
-    #     apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/EnduranceTest.jmx \
-    #                                  -l log/jmeter/EnduranceTestResult.csv \
-    #                                  -e -f -o log/jmeter/endurance-test-html-report \
-    #                                  -j log/jmeter/jmeter-endurance-test.log
-    #   displayName: JMeter endurance test
       - task: ArchiveFiles@2
         displayName: Archive JMeter stress test HTML report
         inputs:
@@ -310,50 +271,50 @@ stages:
           targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
           artifactName: 'drop-jmeter-logs'
 
-  # - job: test_newman
-  #   displayName: Test Postman (using Newman CLI)
-  #   pool:
-  #     name:myAgentPool
-  #   steps: 
-  #   - task: NodeTool@0
-  #     displayName: Install Node v12.X
-  #     inputs:
-  #       versionSpec: '12.x'
-  #   - bash: |
-  #       npm install -g newman
-  #       newman --version
-  #       # create log directory
-  #       mkdir -p log/newman
-  #       pwd
-  #       ls -la
-  #     displayName: Install Newman
-  #   - bash: |
-  #       newman run automatedtesting/postman/Regression Test Suite.json \
-  #                  --reporters cli,junit \
-  #                  --reporter-junit-export log/newman/regression-test.xml \
-  #                  --suppress-exit-code
-  #     displayName: Newman regression test
-  #   - bash: |
-  #       newman run automatedtesting/postman/Data Validation Test Suite.json \
-  #                  -e automatedtesting/postman/validation-test-env.postman-environment.json \
-  #                  --reporters cli,junit \
-  #                  --reporter-junit-export log/newman/validation-test.xml \
-  #                  --suppress-exit-code
-  #       ls -la $(System.DefaultWorkingDirectory)/log/newman/
-  #     displayName: Newman validation test
-  #   - task: PublishPipelineArtifact@1
-  #     displayName: Publish Newman logs
-  #     inputs:
-  #       targetPath: '$(System.DefaultWorkingDirectory)/log/newman'
-  #       artifactName: 'drop-newman-logs'
-  #   - task: PublishTestResults@2
-  #     displayName: 'Publish Newman test results'
-  #     inputs:
-  #       testRunner: 'JUnit'
-  #       searchFolder: '$(System.DefaultWorkingDirectory)/log/newman'
-  #       testResultsFiles: '*.xml'
-  #       mergeTestResults: true
-  #       testRunTitle: 'Publish Newman test results'
+  - job: test_newman
+    displayName: Test Postman (using Newman CLI)
+    pool:
+      name: myAgentPool
+    steps: 
+    - task: NodeTool@0
+      displayName: Install Node v12.X
+      inputs:
+        versionSpec: '12.x'
+    - bash: |
+        npm install -g newman
+        newman --version
+        # create log directory
+        mkdir -p log/newman
+        pwd
+        ls -la
+      displayName: Install Newman
+    - bash: |
+        newman run automatedtesting/postman/Regression Test Suite.json \
+                   --reporters cli,junit \
+                   --reporter-junit-export log/newman/regression-test.xml \
+                   --suppress-exit-code
+      displayName: Newman regression test
+    - bash: |
+        newman run automatedtesting/postman/Data Validation Test Suite.json \
+                   -e automatedtesting/postman/validation-test-env.postman-environment.json \
+                   --reporters cli,junit \
+                   --reporter-junit-export log/newman/validation-test.xml \
+                   --suppress-exit-code
+        ls -la $(System.DefaultWorkingDirectory)/log/newman/
+      displayName: Newman validation test
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Newman logs
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/log/newman'
+        artifactName: 'drop-newman-logs'
+    - task: PublishTestResults@2
+      displayName: 'Publish Newman test results'
+      inputs:
+        testRunner: 'JUnit'
+        searchFolder: '$(System.DefaultWorkingDirectory)/log/newman'
+        testResultsFiles: '*.xml'
+        mergeTestResults: true
+        testRunTitle: 'Publish Newman test results'
 
 - stage: Destroy
   jobs:
