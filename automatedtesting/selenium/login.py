@@ -44,10 +44,15 @@ if __name__ == "__main__":
     print ('Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
-    # options = ChromeOptions()
-    # options.add_argument("--headless") 
-    # driver = webdriver.Chrome(options=options)
-    driver=webdriver.Chrome()
+    options = ChromeOptions()
+    options.add_argument("start-maximized");  
+    options.add_argument("disable-infobars"); 
+    options.add_argument("--disable-extensions"); 
+    # options.addArguments("--disable-gpu"); 
+    options.add_argument("--disable-dev-shm-usage"); 
+    options.add_argument("--no-sandbox"); 
+    driver = webdriver.Chrome(options=options)
+    # driver=webdriver.Chrome()
     login(driver,'standard_user', 'secret_sauce')
     add_items_cart(driver,num_items)
     remove_items(driver,num_items)
