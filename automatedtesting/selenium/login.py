@@ -56,7 +56,7 @@ if __name__ == "__main__":
     chromeOptions.add_argument("disable-infobars")
     # chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
     # options.add_experimental_option("useAutomationExtension", false)
-    driver = webdriver.Chrome(executable_path='automatedtesting/selenium/chromedriver.exe',options=chromeOptions)
+    driver = webdriver.Chrome('/usr/bin/chromedriver.exe',options=chromeOptions)
 # driver=webdriver.Chrome()
     login(driver,'standard_user', 'secret_sauce')
     add_items_cart(driver,num_items)
