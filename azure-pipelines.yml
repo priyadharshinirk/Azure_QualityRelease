@@ -402,18 +402,18 @@ stages:
       inputs:
         terraformVersion: 'latest'
         
-    - task: TerraformTaskV2@2
-      displayName: Terraform Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
-        backendServiceArm: 'MyServiceConnection196044'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196044'
-        backendAzureRmContainerName: 'storagecontainer196044'
-        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+    # - task: TerraformTaskV2@2
+    #   displayName: Terraform Init
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196044'
+    #     backendServiceArm: 'MyServiceConnection196044'
+    #     backendAzureRmResourceGroupName: 'Azuredevops'
+    #     backendAzureRmStorageAccountName: 'storage196044'
+    #     backendAzureRmContainerName: 'storagecontainer196044'
+    #     backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
