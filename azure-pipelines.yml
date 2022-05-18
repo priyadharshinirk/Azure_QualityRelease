@@ -212,7 +212,7 @@ stages:
       name: myAgentPool
     steps:
       - bash: |
-          sudo apt install openjdk-8-jdk openjdk-8-jre
+          sudo apt-get install openjdk-11-jre-headless -y
           java -version
           wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O jmeter.tgz
           tar xzvf jmeter.tgz
