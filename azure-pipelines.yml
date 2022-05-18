@@ -231,7 +231,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             echo 'created folder'
-            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -f -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
       - task: Bash@3
         displayName: 'Run Jmeter Endurance test'
         inputs:
@@ -240,7 +240,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Endurance-test-html-report
             echo 'created folder'
-            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -f -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
           
           # rm automatedtesting/jmeter/StressTestResult.csv
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
@@ -284,22 +284,22 @@ stages:
       - task: ArchiveFiles@2
         displayName: Archive JMeter stress test HTML report
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/Stress-test-html-report'
           includeRootFolder: false
           archiveType: 'zip'
-          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report-$(Build.BuildId).zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/Stress-test-html-report-$(Build.BuildId).zip'
           verbose: true
       - task: ArchiveFiles@2
         displayName: Archive JMeter endurance test HTML report
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/Endurance-test-html-report'
           includeRootFolder: false
           archiveType: 'zip'
-          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report-$(Build.BuildId).zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/Endurance-test-html-report-$(Build.BuildId).zip'
           verbose: true
       - bash: |
-          rm -rf log/jmeter/stress-test-html-report
-          rm -rf log/jmeter/endurance-test-html-report
+          rm -rf log/jmeter/Stress-test-html-report
+          rm -rf log/jmeter/Endurance-test-html-report
           cd log/jmeter
           pwd
           ls -la
@@ -362,48 +362,66 @@ stages:
     pool:
       name: myAgentPool
     steps:
-    - task: DownloadSecureFile@1
-      name: tfvardef
-      displayName: Download terraform.tfvars
-      inputs:
-        secureFile: terraform.tfvars
+    # - task: DownloadSecureFile@1
+    #   name: tfvardef
+    #   displayName: Download terraform.tfvars
+    #   inputs:
+    #     secureFile: terraform.tfvars
 
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: '~/.ssh/known_hosts'
-        sshPublicKey: $(PUBLIC_KEY)
-        sshKeySecureFile: id_rsa.txt
+    # - task: InstallSSHKey@0
+    #   inputs:
+    #     knownHostsEntry: '~/.ssh/known_hosts'
+    #     sshPublicKey: $(PUBLIC_KEY)
+    #     sshKeySecureFile: id_rsa.txt
 
     - bash: |
-        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
-      displayName: Copy terraform.tfvars
+         rm -rf $(System.DefaultWorkingDirectory)/terraform/environment/test
+      displayName: Remove terraform.tfvars
+    
+    - bash: |
+        echo Pipeline workspace dir is $(Pipeline.Workspace)
+        echo Terraform variable definition file is $(tfvardef.secureFilePath)
+        cd $(Agent.TempDirectory)
+        pwd
+        ls -la
+        cat id_rsa.txt.pub
+        cd 
+        pwd
+        ls -la
+        cat known_hosts
+        cd ..
+        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
+        cd $(System.DefaultWorkingDirectory)  
+        pwd
+        ls -la
+      displayName: Verify build environment (post)
 
-    # install Terraform Azure Pipelines Extension by Microsoft DevLabs
-    # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
+      # install Terraform Azure Pipelines Extension by Microsoft DevLabs
+      # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
     - task: TerraformInstaller@0
       displayName: Install Terraform
       inputs:
         terraformVersion: 'latest'
         
-    - task: TerraformTaskV2@2
-      displayName: Terraform Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
-        backendServiceArm: 'MyServiceConnection196044'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196044'
-        backendAzureRmContainerName: 'storagecontainer196044'
-        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+    # - task: TerraformTaskV2@2
+    #   displayName: Terraform Init
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196044'
+    #     backendServiceArm: 'MyServiceConnection196044'
+    #     backendAzureRmResourceGroupName: 'Azuredevops'
+    #     backendAzureRmStorageAccountName: 'storage196044'
+    #     backendAzureRmContainerName: 'storagecontainer196044'
+    #     backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+
     - task: TerraformTaskV2@2
       continueOnError: true
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        commandOptions: |
-          -auto-approve 
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
       displayName: Terraform Destroy
+      inputs:
+          provider: 'azurerm'
+          command: 'destroy'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+          environmentServiceNameAzureRM: 'MyServiceConnection196044'
+      
