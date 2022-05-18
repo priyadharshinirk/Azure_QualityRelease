@@ -1,5 +1,5 @@
 resource "azurerm_network_interface" "test" {
-  name                = "nic195883"
+  name                = "nic1960446"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
 
@@ -12,7 +12,7 @@ resource "azurerm_network_interface" "test" {
 }
 
 resource "azurerm_linux_virtual_machine" "test" {
-  name                = "${var.application_type}-${var.resource_type}"
+  name                = "${var.application_type}_${var.resource_type}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
   size                = "Standard_D2s_v3"
