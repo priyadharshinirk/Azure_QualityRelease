@@ -231,8 +231,8 @@ stages:
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             echo 'created folder'
-            rm automatedtesting/jmeter/StressTestResult.csv
             apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+          # rm automatedtesting/jmeter/StressTestResult.csv
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
           # apache-jmeter-5.4.3/bin/jmeter -g automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
