@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # options.addArguments("--disable-gpu"); 
     options.add_argument("--disable-dev-shm-usage"); 
     options.add_argument("--no-sandbox"); 
-    options.add_experimental_option("useAutomationExtension", false)
+    # options.add_experimental_option("useAutomationExtension", false)
     driver = webdriver.Chrome(options=options)
     # driver=webdriver.Chrome()
     login(driver,'standard_user', 'secret_sauce')
