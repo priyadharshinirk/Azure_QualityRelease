@@ -1,9 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1652784831538,1122,Get All Activities,200,OK,Endurance Test Group 1-1,text,true,,3109,194,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?page=1,1122,0,855
-1652784831538,1123,Get All Activities,200,OK,Endurance Test Group 1-2,text,true,,3109,194,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?page=1,1123,0,856
-1652784832661,241,Get 1 Activity,200,OK,Endurance Test Group 1-1,text,true,,351,192,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?ID=2,241,0,0
-1652784832661,241,Get 1 Activity,200,OK,Endurance Test Group 1-2,text,true,,352,192,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?ID=1,241,0,0
-1652784832903,242,Post Activity Request,200,OK,Endurance Test Group 1-1,text,true,,262,250,2,2,https://udacity-appservice.azurewebsites.net/api/Activities,242,0,0
-1652784832903,242,Post Activity Request,200,OK,Endurance Test Group 1-2,text,true,,262,246,2,2,https://udacity-appservice.azurewebsites.net/api/Activities,242,0,0
-1652784833146,242,Delete Activity Request,200,OK,Endurance Test Group 1-1,,true,,211,218,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?id=1,242,0,0
-1652784833146,242,Delete Activity Request,200,OK,Endurance Test Group 1-2,,true,,211,218,2,2,https://udacity-appservice.azurewebsites.net/api/Activities?id=1,242,0,0
