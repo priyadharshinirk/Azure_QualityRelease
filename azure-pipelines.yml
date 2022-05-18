@@ -384,11 +384,12 @@ stages:
         cd $(Agent.TempDirectory)
         pwd
         ls -la
-        cat id_rsa.pub
+        cat id_rsa.txt.pub
         cd 
         pwd
         ls -la
         cat known_hosts
+        cd ..
         # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
         cd $(System.DefaultWorkingDirectory)  
         pwd
@@ -414,13 +415,13 @@ stages:
     #     backendAzureRmStorageAccountName: 'storage196044'
     #     backendAzureRmContainerName: 'storagecontainer196044'
     #     backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'destroy'
-        commandOptions: |
-          -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        commandOptions: '-auto-approve'
         environmentServiceNameAzureRM: 'MyServiceConnection196044'
       displayName: Terraform Destroy
