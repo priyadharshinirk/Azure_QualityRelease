@@ -418,10 +418,10 @@ stages:
 
     - task: TerraformTaskV2@2
       continueOnError: true
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
       displayName: Terraform Destroy
+      inputs:
+          provider: 'azurerm'
+          command: 'destroy'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+          environmentServiceNameAzureRM: 'MyServiceConnection196044'
+      
