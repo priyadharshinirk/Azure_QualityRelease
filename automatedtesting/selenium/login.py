@@ -44,10 +44,10 @@ if __name__ == "__main__":
     print ('Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
-    options = ChromeOptions()
-    options.add_argument("--headless") 
-    driver = webdriver.Chrome(options=options)
-    # driver=webdriver.Chrome()
+    # options = ChromeOptions()
+    # options.add_argument("--headless") 
+    # driver = webdriver.Chrome(options=options)
+    driver=webdriver.Chrome()
     login(driver,'standard_user', 'secret_sauce')
     add_items_cart(driver,num_items)
     remove_items(driver,num_items)
