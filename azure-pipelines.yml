@@ -274,7 +274,7 @@ stages:
   - job: test_newman
     displayName: Test Postman (using Newman CLI)
     pool:
-      name:myAgentPool
+      name: myAgentPool
     steps: 
     - task: NodeTool@0
       displayName: Install Node v12.X
