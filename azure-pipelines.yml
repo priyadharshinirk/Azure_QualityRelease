@@ -231,13 +231,14 @@ stages:
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             echo 'created folder'
-            truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
+            rm automatedtesting/jmeter/StressTestResult.csv
             apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
           # apache-jmeter-5.4.3/bin/jmeter -g automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
           # –j log/jmeter/jmeter.log
           #-e -o log/jmeter/Stress-test-html-report
+          #  truncate -s 0 automatedtesting/jmeter/StressTestResult.csv
 
   # - job: test_jmeter
   #   displayName: Test JMeter
