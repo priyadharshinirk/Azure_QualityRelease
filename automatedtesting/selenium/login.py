@@ -5,6 +5,7 @@ import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from sqlalchemy import false
+import os
 
 
 # Start the browser and login with standard_user
@@ -53,10 +54,15 @@ if __name__ == "__main__":
     options.add_argument("--disable-dev-shm-usage"); 
     options.add_argument("--no-sandbox"); 
     # options.add_experimental_option("useAutomationExtension", false)
-    driver = webdriver.Chrome(options=options)
+    
+    try:
+        driver = webdriver.Chrome(options=options)
     # driver=webdriver.Chrome()
-    login(driver,'standard_user', 'secret_sauce')
-    add_items_cart(driver,num_items)
-    remove_items(driver,num_items)
+        login(driver,'standard_user', 'secret_sauce')
+        add_items_cart(driver,num_items)
+        remove_items(driver,num_items)
+        driver.quit()
+    except Exception as e:
+        os.system("taskkill /im chromedriver.exe")
 
 
