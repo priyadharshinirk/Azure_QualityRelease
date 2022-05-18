@@ -231,7 +231,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Stress-test-html-report
             echo 'created folder'
-            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/StressTest.jmx -f -l automatedtesting/jmeter/StressTestResult.csv -e -o log/jmeter/Stress-test-html-report
       - task: Bash@3
         displayName: 'Run Jmeter Endurance test'
         inputs:
@@ -240,7 +240,7 @@ stages:
           script: |
             mkdir -p log/jmeter/Endurance-test-html-report
             echo 'created folder'
-            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
+            apache-jmeter-5.4.3/bin/jmeter -Gjmeter.save.saveservice.print_field_names=true  -n -t automatedtesting/jmeter/EnduranceTest.jmx -f -l automatedtesting/jmeter/EnduranceTestResult.csv -e -o log/jmeter/Endurance-test-html-report
           
           # rm automatedtesting/jmeter/StressTestResult.csv
           # apache-jmeter-5.4.3/bin/jmeter -n -t automatedtesting/jmeter/StressTest.jmx -l automatedtesting/jmeter/StressTestResult.csv
