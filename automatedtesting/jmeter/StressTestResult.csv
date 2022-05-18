@@ -1,9 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1652784677514,1094,Get All Activities,200,OK,Stress Test Group 1-1,text,true,,3109,194,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?page=1,1094,0,823
-1652784678610,249,Get 1 Activity,200,OK,Stress Test Group 1-1,text,true,,352,192,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?ID=1,249,0,0
-1652784678860,255,Post Activity Request,200,OK,Stress Test Group 1-1,text,true,,262,245,1,1,https://udacity-appservice.azurewebsites.net/api/Activities,255,0,0
-1652784679116,243,Delete Activity Request,200,OK,Stress Test Group 1-1,,true,,211,218,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?id=1,243,0,0
-1652784682513,1026,Get All Activities,200,OK,Stress Test Group 1-2,text,true,,3109,194,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?page=1,1026,0,761
-1652784683539,242,Get 1 Activity,200,OK,Stress Test Group 1-2,text,true,,351,192,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?ID=2,242,0,0
-1652784683782,242,Post Activity Request,200,OK,Stress Test Group 1-2,text,true,,262,249,1,1,https://udacity-appservice.azurewebsites.net/api/Activities,242,0,0
-1652784684025,247,Delete Activity Request,200,OK,Stress Test Group 1-2,,true,,211,218,1,1,https://udacity-appservice.azurewebsites.net/api/Activities?id=1,247,0,0
