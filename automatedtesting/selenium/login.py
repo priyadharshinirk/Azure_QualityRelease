@@ -51,7 +51,7 @@ if __name__ == "__main__":
     options.add_argument("--disable-dev-shm-usage") #overcome limited resource problems
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
-    driver = webdriver.Chrome(options=options, executable_path="chromedriver.exe")
+    driver = webdriver.Chrome(options=options)
     # driver.get('http://google.com/')
     # chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
     # options.add_experimental_option("useAutomationExtension", false)
