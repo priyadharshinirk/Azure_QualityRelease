@@ -134,7 +134,7 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"var json = pm.response.json();\r",
-							"pm.environment.set(\"id\", json.id);\r",
+							"pm.environment.set(\"name\", json.name);\r",
 							"pm.test(\"User name is available\", function () {\r",
 							"    pm.expect(json.name).to.contain(pm.environment.get(\"name\"));\r",
 							"});\r",
