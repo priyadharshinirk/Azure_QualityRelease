@@ -193,6 +193,7 @@ stages:
               unzip chromedriver_linux64.zip
               sudo mv chromedriver /usr/bin/chromedriver
               sudo chown root:root /usr/bin/chromedriver
+              cd $(Pipeline.Workspace)
               pwd
             # python3 automatedtesting/selenium/login.py
             # cd $(Pipeline.Workspace)/drop-selenium
