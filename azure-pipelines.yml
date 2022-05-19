@@ -187,13 +187,10 @@ stages:
         deploy:
           steps:
           - bash: |
-              cd $(System.DefaultWorkingDirectory)
-              echo default working directory is $(System.DefaultWorkingDirectory)
               wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
               unzip chromedriver_linux64.zip
               sudo mv chromedriver /usr/bin/chromedriver
               sudo chown root:root /usr/bin/chromedriver
-              cd $(Pipeline.Workspace)
               pwd
             # python3 automatedtesting/selenium/login.py
             # cd $(Pipeline.Workspace)/drop-selenium
