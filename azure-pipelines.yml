@@ -178,7 +178,7 @@ stages:
 - stage: Test
   jobs:
   - deployment: myLinuxVM
-    displayName: Test on Virtual Machine
+    displayName: Selenium Test on Virtual Machine
     environment:
       name: 'TEST'
       resourceType: VirtualMachine
@@ -187,12 +187,13 @@ stages:
         deploy:
           steps:
           - bash: |
+              cd /home/devopsagent/myagent/_work/1/s
               wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
               unzip chromedriver_linux64.zip
               sudo mv chromedriver /usr/bin/chromedriver
               sudo chown root:root /usr/bin/chromedriver
               pwd
-            # python3 automatedtesting/selenium/login.py
+              python3 automatedtesting/selenium/login.py
             # cd $(Pipeline.Workspace)/drop-selenium
             # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
             # unzip -o selenium-$(Build.BuildId).zip
