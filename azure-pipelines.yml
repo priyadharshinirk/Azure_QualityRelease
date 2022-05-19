@@ -103,20 +103,20 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         artifactName: 'drop-fakerestapi'
 
-    - task: ArchiveFiles@2
-      displayName: Archive Selenium
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-        verbose: true
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Selenium
+    #   inputs:
+    #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     verbose: true
 
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Selenium artifact
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-        artifactName: 'drop-selenium'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish Selenium artifact
+    #   inputs:
+    #     targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     artifactName: 'drop-selenium'
 
 - stage: Deployment
   jobs:
@@ -193,7 +193,8 @@ stages:
               sudo mv chromedriver /usr/bin/chromedriver
               sudo chown root:root /usr/bin/chromedriver
               pwd
-              python3 automatedtesting/selenium/login.py
+              mkdir -p log/selenium
+              python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log
             # cd $(Pipeline.Workspace)/drop-selenium
             # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
             # unzip -o selenium-$(Build.BuildId).zip
@@ -210,11 +211,31 @@ stages:
             # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
             # ls -la
             displayName: Run selenium tests
-          - task: PublishPipelineArtifact@1
-            displayName: Publish selenium logs
+          - task: ArchiveFiles@2
+            displayName: Archive JMeter stress test HTML report
             inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+              verbose: true
+          - bash: |
+              rm -rf log/selenium/selenium-test.log
+              cd log/selenium
+              pwd
+              ls -la
+            displayName: Delete original Selenium reports
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Selenium logs
+            inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
               artifactName: 'drop-selenium-logs'
+
+          # - task: PublishPipelineArtifact@1
+          #   displayName: Publish selenium logs
+          #   inputs:
+          #     targetPath: 'log/selenium/selenium-test.log'
+          #     artifactName: 'drop-selenium-logs'
   - job: Jmeter
     pool:
       name: myAgentPool
