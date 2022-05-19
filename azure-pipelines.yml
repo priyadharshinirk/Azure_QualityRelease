@@ -392,21 +392,21 @@ stages:
     - task: TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
-        backendServiceArm: 'MyServiceConnection196173'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196173'
-        backendAzureRmContainerName: 'storagecontainer196173'
-        backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
-    - task: TerraformTaskV2@2
-      continueOnError: true
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
+    # - task: TerraformTaskV2@2
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
+    #     backendServiceArm: 'MyServiceConnection196173'
+    #     backendAzureRmResourceGroupName: 'Azuredevops'
+    #     backendAzureRmStorageAccountName: 'storage196173'
+    #     backendAzureRmContainerName: 'storagecontainer196173'
+    #     backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
+    # - task: TerraformTaskV2@2
+    #   continueOnError: true
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'destroy'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
