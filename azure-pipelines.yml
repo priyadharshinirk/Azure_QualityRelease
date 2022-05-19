@@ -214,7 +214,7 @@ stages:
           - task: ArchiveFiles@2
             displayName: Archive Selenium report
             inputs:
-              rootFolderOrFile: 'log/selenium/selenium-test.log'
+              rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
