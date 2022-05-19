@@ -212,9 +212,9 @@ stages:
             # ls -la
             displayName: Run selenium tests
           - task: ArchiveFiles@2
-            displayName: Archive JMeter stress test HTML report
+            displayName: Archive Selenium report
             inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+              rootFolderOrFile: 'log/selenium/selenium-test.log'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
