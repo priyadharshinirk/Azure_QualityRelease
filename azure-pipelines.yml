@@ -10,7 +10,7 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection196044'
+  azureServiceConnectionId: 'MyServiceConnection196173'
   webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
@@ -67,19 +67,19 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
-        backendServiceArm: 'MyServiceConnection196044'
+        environmentServiceNameAzureRM: 'MyServiceConnection196173'
+        backendServiceArm: 'MyServiceConnection196173'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196044'
-        backendAzureRmContainerName: 'storagecontainer196044'
-        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
+        backendAzureRmStorageAccountName: 'storage196173'
+        backendAzureRmContainerName: 'storagecontainer196173'
+        backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
+        environmentServiceNameAzureRM: 'MyServiceConnection196173'
 
 - stage: Build
   jobs:
@@ -138,42 +138,42 @@ stages:
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
 
-  - deployment: myLinuxVM
-    displayName: Deploy Virtual Machine
-    environment:
-      name: 'TEST'
-      resourceType: VirtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - bash: |
-              pwd
-              hostname
-              uname -a
-              cat /etc/*-release
-              sudo apt-get install software-properties-common -y
-              sudo apt-add-repository universe -y
-              sudo apt-get update -y
-              sudo apt-get install python3-pip -y
-              sudo apt-get install unzip -y
-              sudo apt-get install -y chromium-browser
-              sudo apt-get install -y chromium-chromedriver
-              python3 -m pip install --upgrade pip
-              pip3 install selenium
-              python3 -V
-              pip3 -V
-              /usr/bin/chromium-browser --version
-              /usr/bin/chromedriver --version
-              python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
-              # Install Log Analytics agent on Linux computers (only need to run once)
-              # wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
-              # sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
-              # sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
-            env:  # To use secret variables in a script, we must explicitly map them as environment variables.
-              AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
-              AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
-            displayName: Configure selenium
+  # - deployment: myLinuxVM
+  #   displayName: Deploy Virtual Machine
+  #   environment:
+  #     name: 'TEST'
+  #     resourceType: VirtualMachine
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - bash: |
+  #             pwd
+  #             hostname
+  #             uname -a
+  #             cat /etc/*-release
+  #             sudo apt-get install software-properties-common -y
+  #             sudo apt-add-repository universe -y
+  #             sudo apt-get update -y
+  #             sudo apt-get install python3-pip -y
+  #             sudo apt-get install unzip -y
+  #             sudo apt-get install -y chromium-browser
+  #             sudo apt-get install -y chromium-chromedriver
+  #             python3 -m pip install --upgrade pip
+  #             pip3 install selenium
+  #             python3 -V
+  #             pip3 -V
+  #             /usr/bin/chromium-browser --version
+  #             /usr/bin/chromedriver --version
+  #             python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
+  #             # Install Log Analytics agent on Linux computers (only need to run once)
+  #             # wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+  #             # sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+  #             # sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+  #           env:  # To use secret variables in a script, we must explicitly map them as environment variables.
+  #             AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
+  #             AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
+  #           displayName: Configure selenium
 
 - stage: Test
   jobs:
@@ -331,22 +331,22 @@ stages:
     pool:
       name: myAgentPool
     steps:
-    # - task: DownloadSecureFile@1
-    #   name: tfvardef
-    #   displayName: Download terraform.tfvars
-    #   inputs:
-    #     secureFile: terraform.tfvars
+    - task: DownloadSecureFile@1
+      name: tfvardef
+      displayName: Download terraform.tfvars
+      inputs:
+        secureFile: terraform.tfvars
 
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: '~/.ssh/known_hosts'
-    #     sshPublicKey: $(PUBLIC_KEY)
-    #     sshKeySecureFile: id_rsa.txt
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/known_hosts'
+        sshPublicKey: $(PUBLIC_KEY)
+        sshKeySecureFile: id_rsa.txt
 
     - bash: |
-         rm -rf $(System.DefaultWorkingDirectory)/terraform/environment/test
-      displayName: Remove terraform.tfvars
-    
+        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
+      displayName: Copy terraform.tfvars
+
     - bash: |
         echo Pipeline workspace dir is $(Pipeline.Workspace)
         echo Terraform variable definition file is $(tfvardef.secureFilePath)
@@ -368,29 +368,23 @@ stages:
       # install Terraform Azure Pipelines Extension by Microsoft DevLabs
       # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
     - task: TerraformInstaller@0
-      displayName: Install Terraform
       inputs:
         terraformVersion: 'latest'
-        
-    - task: TerraformTaskV1@0
-      displayName: Terraform Init
+    - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196044'
-        backendServiceArm: 'MyServiceConnection196044'
+        environmentServiceNameAzureRM: 'MyServiceConnection196173'
+        backendServiceArm: 'MyServiceConnection196173'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196044'
-        backendAzureRmContainerName: 'storagecontainer196044'
-        backendAzureRmKey: 'kp6lp19+SnhkF3X8oCyDSusuAkX2TBjpsDAbtBh/Lost0ccNHnBpLxFTT2hWEbzbiTCEKh3PXuKdkKoKhXr+uw=='
-
-    - task: TerraformTaskV1@0
+        backendAzureRmStorageAccountName: 'storage196173'
+        backendAzureRmContainerName: 'storagecontainer196173'
+        backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
+    - task: TerraformTaskV2@2
       continueOnError: true
-      displayName: Terraform Destroy
       inputs:
-          provider: 'azurerm'
-          command: 'destroy'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-          environmentServiceNameAzureRM: 'MyServiceConnection196044'
-      
+        provider: 'azurerm'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection196173'
