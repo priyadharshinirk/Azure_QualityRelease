@@ -194,7 +194,7 @@ stages:
               sudo chown root:root /usr/bin/chromedriver
               pwd
               mkdir -p log/selenium
-              python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log
+              python3 automatedtesting/selenium/login.py 2>&1 | sudo tee -a log/selenium/selenium-test.log
             # cd $(Pipeline.Workspace)/drop-selenium
             # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
             # unzip -o selenium-$(Build.BuildId).zip
