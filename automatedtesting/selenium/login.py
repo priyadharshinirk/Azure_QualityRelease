@@ -19,7 +19,6 @@ def login (driver,user, password):
     driver.find_element_by_css_selector("input[id='password']").send_keys(password)
     driver.find_element_by_id("login-button").click()
     product_heading=driver.find_element_by_class_name("title").text
-    print("product test "+product_heading )
     assert "PRODUCTS" in product_heading
     print(timestamp() + 'Login with username {:s} and password {:s} successfully.'.format(user, password))
 
@@ -46,7 +45,7 @@ def remove_items(driver, n_items):
 
 
 if __name__ == "__main__":
-    print ('Starting the browser...')
+    print (timestamp() + 'Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
     options = Options()
