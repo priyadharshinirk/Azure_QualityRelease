@@ -103,20 +103,20 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         artifactName: 'drop-fakerestapi'
 
-    - task: ArchiveFiles@2
-      displayName: Archive Selenium
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-        verbose: true
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Selenium
+    #   inputs:
+    #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     verbose: true
 
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Selenium artifact
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-        artifactName: 'drop-selenium'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish Selenium artifact
+    #   inputs:
+    #     targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     artifactName: 'drop-selenium'
 
 - stage: Deployment
   jobs:
@@ -178,7 +178,7 @@ stages:
 - stage: Test
   jobs:
   - deployment: myLinuxVM
-    displayName: Test on Virtual Machine
+    displayName: Selenium Test on Virtual Machine
     environment:
       name: 'TEST'
       resourceType: VirtualMachine
@@ -187,14 +187,19 @@ stages:
         deploy:
           steps:
           - bash: |
-              cd $(System.DefaultWorkingDirectory)
-              echo default working directory is $(System.DefaultWorkingDirectory)
+              # # Install Log Analytics agent on Linux computers (only need to run once)
+              # wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+              # sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+              # sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+              # Install and run selenium
+              cd /home/devopsagent/myagent/_work/1/s
               wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
               unzip chromedriver_linux64.zip
               sudo mv chromedriver /usr/bin/chromedriver
               sudo chown root:root /usr/bin/chromedriver
               pwd
-            # python3 automatedtesting/selenium/login.py
+              mkdir -p log/selenium
+              python3 automatedtesting/selenium/login.py 2>&1 | sudo tee -a log/selenium/selenium-test.log
             # cd $(Pipeline.Workspace)/drop-selenium
             # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
             # unzip -o selenium-$(Build.BuildId).zip
@@ -211,11 +216,31 @@ stages:
             # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
             # ls -la
             displayName: Run selenium tests
-          - task: PublishPipelineArtifact@1
-            displayName: Publish selenium logs
+          - task: ArchiveFiles@2
+            displayName: Archive Selenium report
             inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+              rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+              verbose: true
+          - bash: |
+              rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log
+              cd log/selenium
+              pwd
+              ls -la
+            displayName: Delete original Selenium reports
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Selenium logs
+            inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
               artifactName: 'drop-selenium-logs'
+
+          # - task: PublishPipelineArtifact@1
+          #   displayName: Publish selenium logs
+          #   inputs:
+          #     targetPath: 'log/selenium/selenium-test.log'
+          #     artifactName: 'drop-selenium-logs'
   - job: Jmeter
     pool:
       name: myAgentPool
@@ -372,21 +397,21 @@ stages:
     - task: TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
-        backendServiceArm: 'MyServiceConnection196173'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196173'
-        backendAzureRmContainerName: 'storagecontainer196173'
-        backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
-    - task: TerraformTaskV2@2
-      continueOnError: true
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
+    # - task: TerraformTaskV2@2
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
+    #     backendServiceArm: 'MyServiceConnection196173'
+    #     backendAzureRmResourceGroupName: 'Azuredevops'
+    #     backendAzureRmStorageAccountName: 'storage196173'
+    #     backendAzureRmContainerName: 'storagecontainer196173'
+    #     backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
+    # - task: TerraformTaskV2@2
+    #   continueOnError: true
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'destroy'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
