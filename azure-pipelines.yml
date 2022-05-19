@@ -220,7 +220,7 @@ stages:
               archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
               verbose: true
           - bash: |
-              rm -rf log/selenium/selenium-test.log
+              rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log
               cd log/selenium
               pwd
               ls -la
