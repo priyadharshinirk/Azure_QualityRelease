@@ -187,6 +187,11 @@ stages:
         deploy:
           steps:
           - bash: |
+              # Install Log Analytics agent on Linux computers (only need to run once)
+              wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+              sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+              sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+              # Install and run selenium
               cd /home/devopsagent/myagent/_work/1/s
               wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
               unzip chromedriver_linux64.zip
