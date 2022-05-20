@@ -4,12 +4,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import datetime
-import logging
 
-logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
 
 def timestamp():
     ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -17,7 +12,7 @@ def timestamp():
 
 # Start the browser and login with standard_user
 def login (driver,user, password):
-    logging.info('Browser started successfully. Navigating to the demo page to login.')
+    print (timestamp()+'Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
     time.sleep(10)
     driver.find_element_by_css_selector("input[id='user-name']").send_keys(user)
@@ -25,7 +20,7 @@ def login (driver,user, password):
     driver.find_element_by_id("login-button").click()
     product_heading=driver.find_element_by_class_name("title").text
     assert "PRODUCTS" in product_heading
-    logging.info('Login with username {:s} and password {:s} successfully.'.format(user, password))
+    print(timestamp() + 'Login with username {:s} and password {:s} successfully.'.format(user, password))
 
 
 def add_items_cart(driver, n_items):
@@ -34,9 +29,9 @@ def add_items_cart(driver, n_items):
         driver.find_element_by_css_selector(element).click()  
         driver.find_element_by_css_selector("button.btn_primary.btn_inventory").click()  
         product = driver.find_element_by_css_selector("div[class='inventory_details_name large_size']").text  
-        logging.info( product + " added to shopping cart.")  
+        print(timestamp() + product + " added to shopping cart.")  
         driver.find_element_by_id("back-to-products").click()  
-    logging.info( '{:d} items are all added to shopping cart successfully.'.format(n_items))
+    print(timestamp() + '{:d} items are all added to shopping cart successfully.'.format(n_items))
 
 def remove_items(driver, n_items):
     for i in range(n_items):
@@ -44,13 +39,13 @@ def remove_items(driver, n_items):
         driver.find_element_by_css_selector(element).click()  
         driver.find_element_by_css_selector("button.btn_small.btn_inventory").click() 
         product = driver.find_element_by_css_selector("div[class='inventory_details_name large_size']").text  
-        logging.info( product + " removed from shopping cart.") 
+        print(timestamp() + product + " removed from shopping cart.") 
         driver.find_element_by_css_selector("button.inventory_details_back_button").click()  
-    logging.info( '{:d} items are all removed from shopping cart successfully.'.format(n_items))
+    print(timestamp() + '{:d} items are all removed from shopping cart successfully.'.format(n_items))
 
 
 if __name__ == "__main__":
-    logging.info('Starting the browser...')
+    print (timestamp() + 'Starting the browser...')
     num_items=6
     # --uncomment when running in Azure DevOps.
     options = Options()
@@ -70,7 +65,7 @@ if __name__ == "__main__":
     login(driver,'standard_user', 'secret_sauce')
     add_items_cart(driver,num_items)
     remove_items(driver,num_items)
-    logging.info( 'Selenium tests are all successfully completed!')
+    print(timestamp() + 'Selenium tests are all successfully completed!')
     driver.quit()
     
 
