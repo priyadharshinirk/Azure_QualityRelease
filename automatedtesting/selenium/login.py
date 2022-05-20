@@ -8,7 +8,7 @@ import datetime
 
 def timestamp():
     ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return (ts + '\t')
+    return (ts+"  ")
 
 # Start the browser and login with standard_user
 def login (driver,user, password):
