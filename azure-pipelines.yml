@@ -187,7 +187,7 @@ stages:
         deploy:
           steps:
           - bash: |
-              # Install and run selenium
+              # Install chromedriver and run selenium
               cd /home/devopsagent/myagent/_work/1/s
               wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
               unzip chromedriver_linux64.zip
