@@ -10,7 +10,7 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection196173'
+  azureServiceConnectionId: 'MyServiceConnection196279'
   webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
@@ -67,19 +67,19 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
-        backendServiceArm: 'MyServiceConnection196173'
+        environmentServiceNameAzureRM: 'MyServiceConnection196279'
+        backendServiceArm: 'MyServiceConnection196279'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196173'
-        backendAzureRmContainerName: 'storagecontainer196173'
-        backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
+        backendAzureRmStorageAccountName: 'storage196279'
+        backendAzureRmContainerName: 'storagecontainer196279'
+        backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
     - task: TerraformTaskV2@2
       continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196173'
+        environmentServiceNameAzureRM: 'MyServiceConnection196279'
 
 - stage: Build
   jobs:
@@ -124,7 +124,7 @@ stages:
     displayName: Deploy FakeRestAPI
     pool:
       name: myAgentPool
-    environment: 'TEST'
+    # environment: 'TEST'
     strategy:
       runOnce:
         deploy:
@@ -179,9 +179,9 @@ stages:
   jobs:
   - deployment: myLinuxVM
     displayName: Selenium Test on Virtual Machine
-    environment:
-      name: 'TEST'
-      resourceType: VirtualMachine
+    # environment:
+    #   name: 'TEST'
+    #   resourceType: VirtualMachine
     strategy:
       runOnce:
         deploy:
@@ -221,7 +221,7 @@ stages:
               archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
               verbose: true
           - bash: |
-              rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId)
+              # rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId)
               cd log/selenium
               pwd
               ls -la
@@ -387,7 +387,7 @@ stages:
         pwd
         ls -la
         cd 
-        cd /home/devopsagent/azagent/_work/1/s/log/selenium
+        cd /home/devopsagent/myagent/_work/1/s/log/selenium
         unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
         cd seleniumlogs
         sudo chmod 775 selenium-test.log-$(Build.BuildId)
@@ -403,16 +403,16 @@ stages:
     #     provider: 'azurerm'
     #     command: 'init'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
-    #     backendServiceArm: 'MyServiceConnection196173'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196279'
+    #     backendServiceArm: 'MyServiceConnection196279'
     #     backendAzureRmResourceGroupName: 'Azuredevops'
-    #     backendAzureRmStorageAccountName: 'storage196173'
-    #     backendAzureRmContainerName: 'storagecontainer196173'
-    #     backendAzureRmKey: '+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=='
+    #     backendAzureRmStorageAccountName: 'storage196279'
+    #     backendAzureRmContainerName: 'storagecontainer196279'
+    #     backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
     # - task: TerraformTaskV2@2
     #   continueOnError: true
     #   inputs:
     #     provider: 'azurerm'
     #     command: 'destroy'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection196173'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196279'
