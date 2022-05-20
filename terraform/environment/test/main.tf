@@ -10,7 +10,7 @@ terraform {
     storage_account_name = "${var.storage_account_name}"
     container_name       = "${var.container_name}"
     key                  = "${var.key}"
-    access_key           = "+uAjSnq1hngSx5UnXX3eJDKpwfyJLTVwDzDuDH+Z69bdvQJGVZDVd3UztjV0LBz5oimqYwh9ISBmZj6GP7Apgw=="
+    access_key           = "+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=="
   }
 }
 module "network" {
