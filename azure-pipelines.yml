@@ -97,11 +97,11 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         verbose: true
 
-    - task: PublishPipelineArtifact@1
-      displayName: Publish FakeRestAPI artifact
-      inputs:
-        targetPath: 'fakerestapi-$(Build.BuildId).zip'
-        artifactName: 'drop-fakerestapi'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish FakeRestAPI artifact
+    #   inputs:
+    #     targetPath: 'fakerestapi-$(Build.BuildId).zip'
+    #     artifactName: 'drop-fakerestapi'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
