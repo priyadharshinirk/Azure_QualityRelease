@@ -253,16 +253,12 @@ stages:
           cd seleniumlogs
           sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
       displayName: Unzip the selenium log
-    - task: AzureFileCopy@4
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
-        SourcePath: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
-        azureSubscription: 'MyServiceConnection196550'
-        Destination: 'AzureVMs'
-        storage: 'storage196550'
-        resourceGroup: 'AZUREDEVOPS'
-        vmsAdminUserName: $(VMUSER)
-        vmsAdminPassword: $(VMPASSWORD)
-        TargetPath: '/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs'
+        Contents: |
+          /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs/selenium-test.log-$(Build.BuildId).txt
+        TargetFolder: '/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium'
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
     #   inputs:
