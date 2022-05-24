@@ -213,7 +213,7 @@ stages:
             sudo mv chromedriver /usr/bin/chromedriver
             sudo chown root:root /usr/bin/chromedriver
             pwd
-            # mkdir -p log/selenium
+            mkdir -p log/selenium
             python3 automatedtesting/selenium/login.py > log/selenium/seleniumlog$(Build.BuildId).txt
             # cat logs.log
             # sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/selenium
