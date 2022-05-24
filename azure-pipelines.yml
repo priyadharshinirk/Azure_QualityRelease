@@ -202,18 +202,33 @@ stages:
     #   runOnce:
     #     deploy:
     steps:
-    - bash: |
-        # Install chromedriver and run selenium
-        cd /home/devopsagent/myagent/_work/1/s
-        wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/bin/chromedriver
-        sudo chown root:root /usr/bin/chromedriver
-        pwd
-        mkdir -p log/selenium
-        python3 automatedtesting/selenium/login.py > logs.log
-        cat logs.log
-        sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/selenium
+      - task : Bash@3
+        displayName: Install and run selenium
+        inputs:
+          targetType : 'inline'
+          script: |
+            # Install chromedriver and run selenium
+            wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/bin/chromedriver
+            sudo chown root:root /usr/bin/chromedriver
+            pwd
+            # mkdir -p log/selenium
+            python3 automatedtesting/selenium/login.py > logs.log
+            cat logs.log
+            sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/selenium
+    # - bash: |
+    #     # Install chromedriver and run selenium
+    #     cd /home/devopsagent/myagent/_work/1/s
+    #     wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
+    #     unzip chromedriver_linux64.zip
+    #     sudo mv chromedriver /usr/bin/chromedriver
+    #     sudo chown root:root /usr/bin/chromedriver
+    #     pwd
+    #     mkdir -p log/selenium
+    #     python3 automatedtesting/selenium/login.py > logs.log
+    #     cat logs.log
+    #     sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/selenium
       # cd $(Pipeline.Workspace)/drop-selenium
       # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
       # unzip -o selenium-$(Build.BuildId).zip
@@ -229,14 +244,13 @@ stages:
       # pwd
       # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
       # ls -la
-      displayName: Run selenium tests
-    - task: ArchiveFiles@2
-      displayName: Archive Selenium report
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/selenium-test.log-$(Build.BuildId).zip'
+      - task: ArchiveFiles@2
+        displayName: Archive Selenium report
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/selenium-test.log-$(Build.BuildId).zip'
 
     # - bash: |
     #     rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
@@ -244,12 +258,12 @@ stages:
     #     pwd
     #     ls -la
     #   displayName: Delete original Selenium reports
-    - task: PublishBuildArtifacts@1
-      displayName: Publish Selenium logs
-      inputs:
-        PathtoPublish: 'automatedtesting/selenium'
-        publishLocation : Container
-        artifactName: 'drop-selenium-logs'
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Selenium logs
+        inputs:
+          PathtoPublish: 'automatedtesting/selenium'
+          publishLocation : Container
+          artifactName: 'drop-selenium-logs'
 
     # - task: PublishTestResults@2
     #   displayName: 'Publish Selenium test results'
@@ -264,12 +278,12 @@ stages:
     #       cd seleniumlogs
     #       sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
     #   displayName: Unzip the selenium log
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-      inputs:
-        Contents: |
-          /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium
-        TargetFolder: '/home/devopsagent/myagent/_work/1/s/selenium'
+      # - task: CopyFiles@2
+      #   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      #   inputs:
+      #     Contents: |
+      #       /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium
+      #     TargetFolder: '/home/devopsagent/myagent/_work/1/s/selenium'
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
     #   inputs:
