@@ -231,10 +231,10 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Selenium report
       inputs:
-        rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium/selenium-test.log-$(Build.BuildId).txt'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/selenium/selenium-test.log-$(Build.BuildId).zip'
         verbose: true
     # - bash: |
     #     rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
@@ -242,23 +242,23 @@ stages:
     #     pwd
     #     ls -la
     #   displayName: Delete original Selenium reports
-    - task: PublishPipelineArtifact@1
+    - task: PublishBuildArtifacts@1
       displayName: Publish Selenium logs
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
+        PathtoPublish: 'automatedtesting/selenium'
         artifactName: 'drop-selenium-logs'
-    - bash: |
-          cd $(System.DefaultWorkingDirectory)/log/selenium
-          unzip -o selenium-test.log-$(Build.BuildId).zip -d /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs
-          cd seleniumlogs
-          sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
-      displayName: Unzip the selenium log
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-      inputs:
-        Contents: |
-          /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs/selenium-test.log-$(Build.BuildId).txt
-        TargetFolder: '/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium'
+    # - bash: |
+    #       cd $(System.DefaultWorkingDirectory)/log/selenium
+    #       unzip -o selenium-test.log-$(Build.BuildId).zip -d /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs
+    #       cd seleniumlogs
+    #       sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
+    #   displayName: Unzip the selenium log
+    # - task: CopyFiles@2
+    #   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    #   inputs:
+    #     Contents: |
+    #       /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs/selenium-test.log-$(Build.BuildId).txt
+    #     TargetFolder: '/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium'
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
     #   inputs:
