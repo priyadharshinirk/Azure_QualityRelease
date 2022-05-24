@@ -81,7 +81,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
         environmentServiceNameAzureRM: 'MyServiceConnection196550'
 
-- stage: Build
+- stage: Build and deploy
   jobs:
   - job: build_artifacts
     displayName: Build Artifacts
@@ -108,6 +108,15 @@ stages:
         ArtifactName: 'drop-fakerestapi'
         # publishLocation: 'FilePath'
         TargetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+    - task: AzureWebApp@1
+      displayName: Deploy Azure WebApp
+      inputs:
+        azureSubscription: $(azureServiceConnectionId)
+        appName: $(webAppName)
+        appType: webApp
+        package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+        deploymentMethod: zipDeploy
+
     # - task: ArchiveFiles@2
     #   displayName: Archive Selenium
     #   inputs:
@@ -123,25 +132,25 @@ stages:
     #     targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
     #     artifactName: 'drop-selenium'
 
-- stage: Deployment
-  jobs:
-  - job: deployment_fakerestapi
-    displayName: Deploy FakeRestAPI
-    pool:
-      name: myAgentPool
-    # environment: 'TEST'
-    # strategy:
-    #   runOnce:
-    #     deploy:
-    steps:
-    - task: AzureWebApp@1
-      displayName: Deploy Azure WebApp
-      inputs:
-        azureSubscription: $(azureServiceConnectionId)
-        appName: $(webAppName)
-        appType: webApp
-        package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
-        deploymentMethod: zipDeploy
+# - stage: Deployment
+#   jobs:
+#   - job: deployment_fakerestapi
+#     displayName: Deploy FakeRestAPI
+#     pool:
+#       name: myAgentPool
+#     # environment: 'TEST'
+#     # strategy:
+#     #   runOnce:
+#     #     deploy:
+#     steps:
+#     - task: AzureWebApp@1
+#       displayName: Deploy Azure WebApp
+#       inputs:
+#         azureSubscription: $(azureServiceConnectionId)
+#         appName: $(webAppName)
+#         appType: webApp
+#         package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+#         deploymentMethod: zipDeploy
 
   # - deployment: myLinuxVM
   #   displayName: Deploy Virtual Machine
