@@ -264,12 +264,12 @@ stages:
     #       cd seleniumlogs
     #       sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
     #   displayName: Unzip the selenium log
-    # - task: CopyFiles@2
-    #   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-    #   inputs:
-    #     Contents: |
-    #       /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs/selenium-test.log-$(Build.BuildId).txt
-    #     TargetFolder: '/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium'
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      inputs:
+        Contents: |
+          /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium
+        TargetFolder: '/home/devopsagent/myagent/_work/1/s/selenium'
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
     #   inputs:
