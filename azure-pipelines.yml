@@ -247,6 +247,12 @@ stages:
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
         artifactName: 'drop-selenium-logs'
+    - bash: |
+          cd /home/devopsagent/myagent/_work/1/s/log/selenium
+          unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
+          cd seleniumlogs
+          sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
+      displayName: Unzip the selenium log
 
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
