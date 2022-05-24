@@ -228,20 +228,20 @@ stages:
       # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
       # ls -la
       displayName: Run selenium tests
-    - task: ArchiveFiles@2
-      displayName: Archive Selenium report
-      inputs:
-        rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
-        verbose: true
-    - bash: |
-        rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
-        cd log/selenium
-        pwd
-        ls -la
-      displayName: Delete original Selenium reports
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Selenium report
+    #   inputs:
+    #     rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+    #     verbose: true
+    # - bash: |
+    #     rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
+    #     cd log/selenium
+    #     pwd
+    #     ls -la
+    #   displayName: Delete original Selenium reports
     - task: PublishPipelineArtifact@1
       displayName: Publish Selenium logs
       inputs:
