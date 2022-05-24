@@ -10,7 +10,7 @@ trigger:
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
-  azureServiceConnectionId: 'MyServiceConnection196279'
+  azureServiceConnectionId: 'MyServiceConnection196550'
   webAppName: 'Udacity-AppService'
 stages:
 - stage: Provision
@@ -67,11 +67,11 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196279'
-        backendServiceArm: 'MyServiceConnection196279'
+        environmentServiceNameAzureRM: 'MyServiceConnection196550'
+        backendServiceArm: 'MyServiceConnection196550'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196279'
-        backendAzureRmContainerName: 'storagecontainer196279'
+        backendAzureRmStorageAccountName: 'storage196550'
+        backendAzureRmContainerName: 'storagecontainer196550'
         backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
     - task: TerraformTaskV2@2
       continueOnError: true
@@ -79,7 +79,7 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196279'
+        environmentServiceNameAzureRM: 'MyServiceConnection196550'
 
 - stage: Build
   jobs:
@@ -120,23 +120,23 @@ stages:
 
 - stage: Deployment
   jobs:
-  - deployment: deployment_fakerestapi
+  - job: deployment_fakerestapi
     displayName: Deploy FakeRestAPI
     pool:
       name: myAgentPool
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: Deploy Azure WebApp
-            inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
-              deploymentMethod: zipDeploy
+    # environment: 'TEST'
+    # strategy:
+    #   runOnce:
+    #     deploy:
+    steps:
+    - task: AzureWebApp@1
+      displayName: Deploy Azure WebApp
+      inputs:
+        azureSubscription: $(azureServiceConnectionId)
+        appName: $(webAppName)
+        appType: webApp
+        package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
+        deploymentMethod: zipDeploy
 
   # - deployment: myLinuxVM
   #   displayName: Deploy Virtual Machine
@@ -177,66 +177,66 @@ stages:
 
 - stage: Test
   jobs:
-  - deployment: myLinuxVM
+  - job: myLinuxVM
     displayName: Selenium Test on Virtual Machine
-    environment:
-      name: 'TEST'
-      resourceType: VirtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - bash: |
-              # Install chromedriver and run selenium
-              cd /home/devopsagent/myagent/_work/1/s
-              wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
-              unzip chromedriver_linux64.zip
-              sudo mv chromedriver /usr/bin/chromedriver
-              sudo chown root:root /usr/bin/chromedriver
-              pwd
-              mkdir -p log/selenium
-              python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log-$(Build.BuildId).txt
-            # cd $(Pipeline.Workspace)/drop-selenium
-            # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
-            # unzip -o selenium-$(Build.BuildId).zip
-            # pwd
-            # ls -la
-            # sudo mkdir -p /var/log/selenium
-            # sudo chmod 664 /var/log/selenium
-            # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
-            # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-            # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
-            # cd $(System.DefaultWorkingDirectory)
-            # mkdir -p log/selenium
-            # pwd
-            # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-            # ls -la
-            displayName: Run selenium tests
-          - task: ArchiveFiles@2
-            displayName: Archive Selenium report
-            inputs:
-              rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
-              verbose: true
-          - bash: |
-              rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
-              cd log/selenium
-              pwd
-              ls -la
-            displayName: Delete original Selenium reports
-          - task: PublishPipelineArtifact@1
-            displayName: Publish Selenium logs
-            inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
-              artifactName: 'drop-selenium-logs'
+    # environment:
+    #   name: 'TEST'
+    #   resourceType: VirtualMachine
+    # strategy:
+    #   runOnce:
+    #     deploy:
+      steps:
+      - bash: |
+          # Install chromedriver and run selenium
+          cd /home/devopsagent/myagent/_work/1/s
+          wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/bin/chromedriver
+          sudo chown root:root /usr/bin/chromedriver
+          pwd
+          mkdir -p log/selenium
+          python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log-$(Build.BuildId).txt
+        # cd $(Pipeline.Workspace)/drop-selenium
+        # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
+        # unzip -o selenium-$(Build.BuildId).zip
+        # pwd
+        # ls -la
+        # sudo mkdir -p /var/log/selenium
+        # sudo chmod 664 /var/log/selenium
+        # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
+        # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+        # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+        # cd $(System.DefaultWorkingDirectory)
+        # mkdir -p log/selenium
+        # pwd
+        # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
+        # ls -la
+        displayName: Run selenium tests
+      - task: ArchiveFiles@2
+        displayName: Archive Selenium report
+        inputs:
+          rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+          verbose: true
+      - bash: |
+          rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
+          cd log/selenium
+          pwd
+          ls -la
+        displayName: Delete original Selenium reports
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Selenium logs
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
+          artifactName: 'drop-selenium-logs'
 
-          # - task: PublishPipelineArtifact@1
-          #   displayName: Publish selenium logs
-          #   inputs:
-          #     targetPath: 'log/selenium/selenium-test.log'
-          #     artifactName: 'drop-selenium-logs'
+      # - task: PublishPipelineArtifact@1
+      #   displayName: Publish selenium logs
+      #   inputs:
+      #     targetPath: 'log/selenium/selenium-test.log'
+      #     artifactName: 'drop-selenium-logs'
   - job: Jmeter
     pool:
       name: myAgentPool
@@ -387,7 +387,7 @@ stages:
         pwd
         ls -la
         cd 
-        cd /home/devopsagent/azagent/_work/1/s/log/selenium
+        cd /home/devopsagent/myagent/_work/1/s/log/selenium
         unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
         cd seleniumlogs
         sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
@@ -403,11 +403,11 @@ stages:
     #     provider: 'azurerm'
     #     command: 'init'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection196279'
-    #     backendServiceArm: 'MyServiceConnection196279'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196550'
+    #     backendServiceArm: 'MyServiceConnection196550'
     #     backendAzureRmResourceGroupName: 'Azuredevops'
-    #     backendAzureRmStorageAccountName: 'storage196279'
-    #     backendAzureRmContainerName: 'storagecontainer196279'
+    #     backendAzureRmStorageAccountName: 'storage196550'
+    #     backendAzureRmContainerName: 'storagecontainer196550'
     #     backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
     # - task: TerraformTaskV2@2
     #   continueOnError: true
@@ -415,4 +415,4 @@ stages:
     #     provider: 'azurerm'
     #     command: 'destroy'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-    #     environmentServiceNameAzureRM: 'MyServiceConnection196279'
+    #     environmentServiceNameAzureRM: 'MyServiceConnection196550'
