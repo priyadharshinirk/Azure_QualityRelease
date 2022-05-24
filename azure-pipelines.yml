@@ -408,11 +408,11 @@ stages:
         cd $(System.DefaultWorkingDirectory)  
         pwd
         ls -la
-        cd 
-        cd /home/devopsagent/myagent/_work/1/s/log/selenium
-        unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
-        cd seleniumlogs
-        sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
+        # cd 
+        # cd /home/devopsagent/myagent/_work/1/s/log/selenium
+        # unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
+        # cd seleniumlogs
+        # sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
       displayName: Verify build environment (post)
 
       # install Terraform Azure Pipelines Extension by Microsoft DevLabs
