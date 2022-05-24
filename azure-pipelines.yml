@@ -135,7 +135,7 @@ stages:
         azureSubscription: $(azureServiceConnectionId)
         appName: $(webAppName)
         appType: webApp
-        package: fakerestapi-$(Build.BuildId).zip
+        package: 'fakerestapi-$(Build.BuildId).zip'
         deploymentMethod: zipDeploy
 
   # - deployment: myLinuxVM
