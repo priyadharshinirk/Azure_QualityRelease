@@ -212,21 +212,6 @@ stages:
         pwd
         mkdir -p log/selenium
         python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log-$(Build.BuildId).txt
-      # cd $(Pipeline.Workspace)/drop-selenium
-      # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
-      # unzip -o selenium-$(Build.BuildId).zip
-      # pwd
-      # ls -la
-      # sudo mkdir -p /var/log/selenium
-      # sudo chmod 664 /var/log/selenium
-      # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
-      # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-      # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
-      # cd $(System.DefaultWorkingDirectory)
-      # mkdir -p log/selenium
-      # pwd
-      # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-      # ls -la
       displayName: Run selenium tests
     # - task: ArchiveFiles@2
     #   displayName: Archive Selenium report
@@ -245,14 +230,14 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Selenium logs
       inputs:
-        targetPath: 'log/selenium/selenium-test.log'
+        targetPath: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
         artifactName: 'drop-selenium-logs'
-    - bash: |
-          cd /home/devopsagent/myagent/_work/1/s/log/selenium
-          unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
-          cd seleniumlogs
-          sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
-      displayName: Unzip the selenium log
+    # - bash: |
+    #       cd /home/devopsagent/myagent/_work/1/s/log/selenium
+    #       unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
+    #       cd seleniumlogs
+    #       sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
+    #   displayName: Unzip the selenium log
 
     # - task: PublishPipelineArtifact@1
     #   displayName: Publish selenium logs
