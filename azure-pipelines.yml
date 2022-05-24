@@ -13,101 +13,136 @@ variables:
   azureServiceConnectionId: 'MyServiceConnection196550'
   webAppName: 'Udacity-AppService'
 stages:
-# - stage: Provision
+- stage: Provision
+  jobs:
+  - job: provision_azure_infrastructure
+    displayName: Provision Azure Infrastructure
+    pool:
+      name: myAgentPool
+    steps:
+    - task: DownloadSecureFile@1
+      name: tfvardef
+      displayName: Download terraform.tfvars
+      inputs:
+        secureFile: terraform.tfvars
+
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/known_hosts'
+        sshPublicKey: $(PUBLIC_KEY)
+        sshKeySecureFile: id_rsa.txt
+
+    - bash: |
+        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
+      displayName: Copy terraform.tfvars
+
+    - bash: |
+        echo Pipeline workspace dir is $(Pipeline.Workspace)
+        echo Terraform variable definition file is $(tfvardef.secureFilePath)
+        cd $(Agent.TempDirectory)
+        pwd
+        ls -la
+        cat id_rsa.pub
+        cd 
+        pwd
+        ls -la
+        cat known_hosts
+        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
+        cd $(System.DefaultWorkingDirectory)  
+        pwd
+        ls -la
+      displayName: Verify build environment (pre)
+
+    # install Terraform Azure Pipelines Extension by Microsoft DevLabs
+    # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
+    # - task: TerraformInstaller@0
+    #   displayName: Install Terraform
+    #   inputs:
+    #     terraformVersion: '0.203.0'
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection196550'
+        backendServiceArm: 'MyServiceConnection196550'
+        backendAzureRmResourceGroupName: 'Azuredevops'
+        backendAzureRmStorageAccountName: 'storage196550'
+        backendAzureRmContainerName: 'storagecontainer196550'
+        backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
+    - task: TerraformTaskV2@2
+      continueOnError: true
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: 'MyServiceConnection196550'
+
+- stage: Build_and_deploy
+  jobs:
+  - job: build_artifacts_and_deploy
+    displayName: Build Artifacts
+    pool:
+      name: myAgentPool
+    steps:
+    - task: ArchiveFiles@2
+      displayName: Archive FakeRestAPI
+      inputs:
+        rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+        verbose: true
+
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish FakeRestAPI artifact
+    #   inputs:
+    #     targetPath: 'fakerestapi-$(Build.BuildId).zip'
+    #     artifactName: 'drop-fakerestapi'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop-fakerestapi'
+        # publishLocation: 'FilePath'
+        TargetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+    - task: AzureWebApp@1
+      displayName: Deploy Azure WebApp
+      inputs:
+        azureSubscription: $(azureServiceConnectionId)
+        appName: $(webAppName)
+        appType: webApp
+        package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+        deploymentMethod: zipDeploy
+
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Selenium
+    #   inputs:
+    #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     verbose: true
+
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish Selenium artifact
+    #   inputs:
+    #     targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
+    #     artifactName: 'drop-selenium'
+
+# - stage: Deployment
 #   jobs:
-#   - job: provision_azure_infrastructure
-#     displayName: Provision Azure Infrastructure
+#   - job: deployment_fakerestapi
+#     displayName: Deploy FakeRestAPI
 #     pool:
 #       name: myAgentPool
+#     # environment: 'TEST'
+#     # strategy:
+#     #   runOnce:
+#     #     deploy:
 #     steps:
-#     - task: DownloadSecureFile@1
-#       name: tfvardef
-#       displayName: Download terraform.tfvars
-#       inputs:
-#         secureFile: terraform.tfvars
-
-#     - task: InstallSSHKey@0
-#       inputs:
-#         knownHostsEntry: '~/.ssh/known_hosts'
-#         sshPublicKey: $(PUBLIC_KEY)
-#         sshKeySecureFile: id_rsa.txt
-
-#     - bash: |
-#         cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
-#       displayName: Copy terraform.tfvars
-
-#     - bash: |
-#         echo Pipeline workspace dir is $(Pipeline.Workspace)
-#         echo Terraform variable definition file is $(tfvardef.secureFilePath)
-#         cd $(Agent.TempDirectory)
-#         pwd
-#         ls -la
-#         cat id_rsa.pub
-#         cd 
-#         pwd
-#         ls -la
-#         cat known_hosts
-#         # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
-#         cd $(System.DefaultWorkingDirectory)  
-#         pwd
-#         ls -la
-#       displayName: Verify build environment (pre)
-
-#     # install Terraform Azure Pipelines Extension by Microsoft DevLabs
-#     # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
-#     # - task: TerraformInstaller@0
-#     #   displayName: Install Terraform
-#     #   inputs:
-#     #     terraformVersion: '0.203.0'
-#     - task: TerraformInstaller@0
-#       inputs:
-#         terraformVersion: 'latest'
-#     - task: TerraformTaskV2@2
-#       inputs:
-#         provider: 'azurerm'
-#         command: 'init'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-#         environmentServiceNameAzureRM: 'MyServiceConnection196550'
-#         backendServiceArm: 'MyServiceConnection196550'
-#         backendAzureRmResourceGroupName: 'Azuredevops'
-#         backendAzureRmStorageAccountName: 'storage196550'
-#         backendAzureRmContainerName: 'storagecontainer196550'
-#         backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
-#     - task: TerraformTaskV2@2
-#       continueOnError: true
-#       inputs:
-#         provider: 'azurerm'
-#         command: 'apply'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-#         environmentServiceNameAzureRM: 'MyServiceConnection196550'
-
-# - stage: Build_and_deploy
-#   jobs:
-#   - job: build_artifacts_and_deploy
-#     displayName: Build Artifacts
-#     pool:
-#       name: myAgentPool
-#     steps:
-#     - task: ArchiveFiles@2
-#       displayName: Archive FakeRestAPI
-#       inputs:
-#         rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
-#         includeRootFolder: false
-#         archiveType: 'zip'
-#         archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
-#         verbose: true
-
-#     # - task: PublishPipelineArtifact@1
-#     #   displayName: Publish FakeRestAPI artifact
-#     #   inputs:
-#     #     targetPath: 'fakerestapi-$(Build.BuildId).zip'
-#     #     artifactName: 'drop-fakerestapi'
-#     - task: PublishBuildArtifacts@1
-#       inputs:
-#         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#         ArtifactName: 'drop-fakerestapi'
-#         # publishLocation: 'FilePath'
-#         TargetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
 #     - task: AzureWebApp@1
 #       displayName: Deploy Azure WebApp
 #       inputs:
@@ -117,77 +152,42 @@ stages:
 #         package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
 #         deploymentMethod: zipDeploy
 
-#     # - task: ArchiveFiles@2
-#     #   displayName: Archive Selenium
-#     #   inputs:
-#     #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-#     #     includeRootFolder: false
-#     #     archiveType: 'zip'
-#     #     archiveFile: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-#     #     verbose: true
-
-#     # - task: PublishPipelineArtifact@1
-#     #   displayName: Publish Selenium artifact
-#     #   inputs:
-#     #     targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
-#     #     artifactName: 'drop-selenium'
-
-# # - stage: Deployment
-# #   jobs:
-# #   - job: deployment_fakerestapi
-# #     displayName: Deploy FakeRestAPI
-# #     pool:
-# #       name: myAgentPool
-# #     # environment: 'TEST'
-# #     # strategy:
-# #     #   runOnce:
-# #     #     deploy:
-# #     steps:
-# #     - task: AzureWebApp@1
-# #       displayName: Deploy Azure WebApp
-# #       inputs:
-# #         azureSubscription: $(azureServiceConnectionId)
-# #         appName: $(webAppName)
-# #         appType: webApp
-# #         package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
-# #         deploymentMethod: zipDeploy
-
-#   # - deployment: myLinuxVM
-#   #   displayName: Deploy Virtual Machine
-#   #   environment:
-#   #     name: 'TEST'
-#   #     resourceType: VirtualMachine
-#   #   strategy:
-#   #     runOnce:
-#   #       deploy:
-#   #         steps:
-#   #         - bash: |
-#   #             pwd
-#   #             hostname
-#   #             uname -a
-#   #             cat /etc/*-release
-#   #             sudo apt-get install software-properties-common -y
-#   #             sudo apt-add-repository universe -y
-#   #             sudo apt-get update -y
-#   #             sudo apt-get install python3-pip -y
-#   #             sudo apt-get install unzip -y
-#   #             sudo apt-get install -y chromium-browser
-#   #             sudo apt-get install -y chromium-chromedriver
-#   #             python3 -m pip install --upgrade pip
-#   #             pip3 install selenium
-#   #             python3 -V
-#   #             pip3 -V
-#   #             /usr/bin/chromium-browser --version
-#   #             /usr/bin/chromedriver --version
-#   #             python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
-#   #             # Install Log Analytics agent on Linux computers (only need to run once)
-#   #             # wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
-#   #             # sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
-#   #             # sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
-#   #           env:  # To use secret variables in a script, we must explicitly map them as environment variables.
-#   #             AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
-#   #             AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
-#   #           displayName: Configure selenium
+  # - deployment: myLinuxVM
+  #   displayName: Deploy Virtual Machine
+  #   environment:
+  #     name: 'TEST'
+  #     resourceType: VirtualMachine
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - bash: |
+  #             pwd
+  #             hostname
+  #             uname -a
+  #             cat /etc/*-release
+  #             sudo apt-get install software-properties-common -y
+  #             sudo apt-add-repository universe -y
+  #             sudo apt-get update -y
+  #             sudo apt-get install python3-pip -y
+  #             sudo apt-get install unzip -y
+  #             sudo apt-get install -y chromium-browser
+  #             sudo apt-get install -y chromium-chromedriver
+  #             python3 -m pip install --upgrade pip
+  #             pip3 install selenium
+  #             python3 -V
+  #             pip3 -V
+  #             /usr/bin/chromium-browser --version
+  #             /usr/bin/chromedriver --version
+  #             python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
+  #             # Install Log Analytics agent on Linux computers (only need to run once)
+  #             # wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+  #             # sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+  #             # sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+  #           env:  # To use secret variables in a script, we must explicitly map them as environment variables.
+  #             AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
+  #             AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
+  #           displayName: Configure selenium
 
 - stage: Test
   jobs:
@@ -259,18 +259,18 @@ stages:
     #     ls -la
     #   displayName: Delete original Selenium reports
       - task: PublishPipelineArtifact@1
-        displayName: Publish Newman logs
+        displayName: Publish Selenium logs
         inputs:
           targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
           artifactName: 'drop-selenium-logs'
-      - task: PublishTestResults@2
-        displayName: 'Publish Newman test results'
-        inputs:
-          testRunner: 'JUnit'
-          searchFolder: '$(System.DefaultWorkingDirectory)/log/selenium'
-          testResultsFiles: '*.txt'
-          mergeTestResults: true
-          testRunTitle: 'Publish selenium test results'
+      # - task: PublishTestResults@2
+      #   displayName: 'Publish Newman test results'
+      #   inputs:
+      #     testRunner: 'JUnit'
+      #     searchFolder: '$(System.DefaultWorkingDirectory)/log/selenium'
+      #     testResultsFiles: '*.txt'
+      #     mergeTestResults: true
+      #     testRunTitle: 'Publish selenium test results'
       # - task: PublishBuildArtifacts@1
       #   displayName: Publish Selenium logs
       #   inputs:
@@ -420,72 +420,72 @@ stages:
         mergeTestResults: true
         testRunTitle: 'Publish Newman test results'
 
-- stage: Destroy
-  jobs:
-  - job: destroy_azure_infrastructure
-    displayName: Destroy Azure Infrastructure
-    pool:
-      name: myAgentPool
-    steps:
-    - task: DownloadSecureFile@1
-      name: tfvardef
-      displayName: Download terraform.tfvars
-      inputs:
-        secureFile: terraform.tfvars
+# - stage: Destroy
+#   jobs:
+#   - job: destroy_azure_infrastructure
+#     displayName: Destroy Azure Infrastructure
+#     pool:
+#       name: myAgentPool
+#     steps:
+#     - task: DownloadSecureFile@1
+#       name: tfvardef
+#       displayName: Download terraform.tfvars
+#       inputs:
+#         secureFile: terraform.tfvars
 
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: '~/.ssh/known_hosts'
-        sshPublicKey: $(PUBLIC_KEY)
-        sshKeySecureFile: id_rsa.txt
+#     - task: InstallSSHKey@0
+#       inputs:
+#         knownHostsEntry: '~/.ssh/known_hosts'
+#         sshPublicKey: $(PUBLIC_KEY)
+#         sshKeySecureFile: id_rsa.txt
 
-    - bash: |
-        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
-      displayName: Copy terraform.tfvars
+#     - bash: |
+#         cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environment/test
+#       displayName: Copy terraform.tfvars
 
-    - bash: |
-        echo Pipeline workspace dir is $(Pipeline.Workspace)
-        echo Terraform variable definition file is $(tfvardef.secureFilePath)
-        cd $(Agent.TempDirectory)
-        pwd
-        ls -la
-        cat id_rsa.txt.pub
-        cd 
-        pwd
-        ls -la
-        cat known_hosts
-        cd ..
-        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
-        cd $(System.DefaultWorkingDirectory)  
-        pwd
-        ls -la
-        # cd 
-        # cd /home/devopsagent/myagent/_work/1/s/log/selenium
-        # unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
-        # cd seleniumlogs
-        # sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
-      displayName: Verify build environment (post)
+#     - bash: |
+#         echo Pipeline workspace dir is $(Pipeline.Workspace)
+#         echo Terraform variable definition file is $(tfvardef.secureFilePath)
+#         cd $(Agent.TempDirectory)
+#         pwd
+#         ls -la
+#         cat id_rsa.txt.pub
+#         cd 
+#         pwd
+#         ls -la
+#         cat known_hosts
+#         cd ..
+#         # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
+#         cd $(System.DefaultWorkingDirectory)  
+#         pwd
+#         ls -la
+#         # cd 
+#         # cd /home/devopsagent/myagent/_work/1/s/log/selenium
+#         # unzip -o selenium-test.log-$(Build.BuildId).zip -d seleniumlogs
+#         # cd seleniumlogs
+#         # sudo chmod 775 selenium-test.log-$(Build.BuildId).txt
+#       displayName: Verify build environment (post)
 
-      # install Terraform Azure Pipelines Extension by Microsoft DevLabs
-      # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
-    - task: TerraformInstaller@0
-      inputs:
-        terraformVersion: 'latest'
-    - task: TerraformTaskV2@2
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196550'
-        backendServiceArm: 'MyServiceConnection196550'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'storage196550'
-        backendAzureRmContainerName: 'storagecontainer196550'
-        backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
-    - task: TerraformTaskV2@2
-      continueOnError: true
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: 'MyServiceConnection196550'
+#       # install Terraform Azure Pipelines Extension by Microsoft DevLabs
+#       # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
+#     - task: TerraformInstaller@0
+#       inputs:
+#         terraformVersion: 'latest'
+#     - task: TerraformTaskV2@2
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'init'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+#         environmentServiceNameAzureRM: 'MyServiceConnection196550'
+#         backendServiceArm: 'MyServiceConnection196550'
+#         backendAzureRmResourceGroupName: 'Azuredevops'
+#         backendAzureRmStorageAccountName: 'storage196550'
+#         backendAzureRmContainerName: 'storagecontainer196550'
+#         backendAzureRmKey: '+L5KZn+WvlTEhsX0AyHssVycrxfDvf8pnevLZbUyr3SETPqYf7iywzIttmcjYxKA4tiaJ/M+0jR+b0/wLa4wEg=='
+#     - task: TerraformTaskV2@2
+#       continueOnError: true
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'destroy'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+#         environmentServiceNameAzureRM: 'MyServiceConnection196550'
