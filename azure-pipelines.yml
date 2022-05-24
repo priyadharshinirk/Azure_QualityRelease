@@ -81,7 +81,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
         environmentServiceNameAzureRM: 'MyServiceConnection196550'
 
-- stage: Build and deploy
+- stage: Build_and_deploy
   jobs:
   - job: build_artifacts
     displayName: Build Artifacts
