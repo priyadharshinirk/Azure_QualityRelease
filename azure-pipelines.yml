@@ -185,58 +185,58 @@ stages:
     # strategy:
     #   runOnce:
     #     deploy:
-      steps:
-      - bash: |
-          # Install chromedriver and run selenium
-          cd /home/devopsagent/myagent/_work/1/s
-          wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/bin/chromedriver
-          sudo chown root:root /usr/bin/chromedriver
-          pwd
-          mkdir -p log/selenium
-          python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log-$(Build.BuildId).txt
-        # cd $(Pipeline.Workspace)/drop-selenium
-        # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
-        # unzip -o selenium-$(Build.BuildId).zip
-        # pwd
-        # ls -la
-        # sudo mkdir -p /var/log/selenium
-        # sudo chmod 664 /var/log/selenium
-        # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
-        # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-        # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
-        # cd $(System.DefaultWorkingDirectory)
-        # mkdir -p log/selenium
-        # pwd
-        # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-        # ls -la
-        displayName: Run selenium tests
-      - task: ArchiveFiles@2
-        displayName: Archive Selenium report
-        inputs:
-          rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
-          includeRootFolder: false
-          archiveType: 'zip'
-          archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
-          verbose: true
-      - bash: |
-          rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
-          cd log/selenium
-          pwd
-          ls -la
-        displayName: Delete original Selenium reports
-      - task: PublishPipelineArtifact@1
-        displayName: Publish Selenium logs
-        inputs:
-          targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
-          artifactName: 'drop-selenium-logs'
+    steps:
+    - bash: |
+        # Install chromedriver and run selenium
+        cd /home/devopsagent/myagent/_work/1/s
+        wget https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/bin/chromedriver
+        sudo chown root:root /usr/bin/chromedriver
+        pwd
+        mkdir -p log/selenium
+        python3 automatedtesting/selenium/login.py | sudo tee -a log/selenium/selenium-test.log-$(Build.BuildId).txt
+      # cd $(Pipeline.Workspace)/drop-selenium
+      # find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
+      # unzip -o selenium-$(Build.BuildId).zip
+      # pwd
+      # ls -la
+      # sudo mkdir -p /var/log/selenium
+      # sudo chmod 664 /var/log/selenium
+      # PATH="$PATH:automatedtesting/selenium/chromedriver.exe"
+      # sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+      # # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+      # cd $(System.DefaultWorkingDirectory)
+      # mkdir -p log/selenium
+      # pwd
+      # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
+      # ls -la
+      displayName: Run selenium tests
+    - task: ArchiveFiles@2
+      displayName: Archive Selenium report
+      inputs:
+        rootFolderOrFile: '/home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log-$(Build.BuildId).zip'
+        verbose: true
+    - bash: |
+        rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
+        cd log/selenium
+        pwd
+        ls -la
+      displayName: Delete original Selenium reports
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Selenium logs
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/log/selenium'
+        artifactName: 'drop-selenium-logs'
 
-      # - task: PublishPipelineArtifact@1
-      #   displayName: Publish selenium logs
-      #   inputs:
-      #     targetPath: 'log/selenium/selenium-test.log'
-      #     artifactName: 'drop-selenium-logs'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish selenium logs
+    #   inputs:
+    #     targetPath: 'log/selenium/selenium-test.log'
+    #     artifactName: 'drop-selenium-logs'
   - job: Jmeter
     pool:
       name: myAgentPool
