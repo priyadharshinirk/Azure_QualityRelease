@@ -211,7 +211,7 @@ stages:
         sudo chown root:root /usr/bin/chromedriver
         pwd
         mkdir -p log/selenium
-        python3 automatedtesting/selenium/login.py logs.log
+        python3 automatedtesting/selenium/login.py > logs.log
         cat logs.log
         sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/seleniumpython3 automatedtesting/selenium/login.py > logs.log
         cat logs.log
