@@ -107,7 +107,7 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop-fakerestapi'
         # publishLocation: 'FilePath'
-        TargetPath: 'fakerestapi-$(Build.BuildId).zip'
+        TargetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
     # - task: ArchiveFiles@2
     #   displayName: Archive Selenium
     #   inputs:
