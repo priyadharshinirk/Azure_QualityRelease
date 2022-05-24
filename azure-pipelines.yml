@@ -230,14 +230,14 @@ stages:
       # sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
       # ls -la
       displayName: Run selenium tests
-    - task: ArchiveFiles@2
-      displayName: Archive Selenium report
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium/selenium-test.log-$(Build.BuildId).zip'
-        verbose: true
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Selenium report
+    #   inputs:
+    #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium/selenium-test.log-$(Build.BuildId).zip'
+    #     verbose: true
     # - bash: |
     #     rm -rf /home/devopsagent/myagent/_work/1/s/log/selenium/selenium-test.log-$(Build.BuildId).txt
     #     cd log/selenium
@@ -248,7 +248,16 @@ stages:
       displayName: Publish Selenium logs
       inputs:
         PathtoPublish: 'automatedtesting/selenium'
+        publishLocation : Container
         artifactName: 'drop-selenium-logs'
+
+    - task: PublishTestResults@2
+      displayName: 'Publish Selenium test results'
+      inputs:
+        searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+        testResultsFiles: '*.txt'
+        mergeTestResults: true
+        testRunTitle: 'Publish Selenium test results'
     # - bash: |
     #       cd $(System.DefaultWorkingDirectory)/log/selenium
     #       unzip -o selenium-test.log-$(Build.BuildId).zip -d /home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/seleniumlogs
