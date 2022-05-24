@@ -193,6 +193,8 @@ stages:
   jobs:
   - job: myLinuxVM
     displayName: Selenium Test on Virtual Machine
+    pool:
+       name: myAgentPool
     # environment:
     #   name: 'TEST'
     #   resourceType: VirtualMachine
