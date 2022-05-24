@@ -83,7 +83,7 @@ stages:
 
 - stage: Build_and_deploy
   jobs:
-  - job: build_artifacts
+  - job: build_artifacts_and_deploy
     displayName: Build Artifacts
     pool:
       name: myAgentPool
