@@ -102,7 +102,12 @@ stages:
       inputs:
         targetPath: 'fakerestapi-$(Build.BuildId).zip'
         artifactName: 'drop-fakerestapi'
-
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop-fakerestapi'
+        # publishLocation: 'FilePath'
+        TargetPath: 'fakerestapi-$(Build.BuildId).zip'
     # - task: ArchiveFiles@2
     #   displayName: Archive Selenium
     #   inputs:
@@ -135,7 +140,7 @@ stages:
         azureSubscription: $(azureServiceConnectionId)
         appName: $(webAppName)
         appType: webApp
-        package: 'fakerestapi-$(Build.BuildId).zip'
+        package: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         deploymentMethod: zipDeploy
 
   # - deployment: myLinuxVM
