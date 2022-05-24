@@ -94,7 +94,7 @@ stages:
         rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: 'fakerestapi-$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         verbose: true
 
     - task: PublishPipelineArtifact@1
